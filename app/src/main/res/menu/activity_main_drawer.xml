@@ -16,6 +16,8 @@
             <item android:title="Filter by"
                 android:icon="@drawable/filter_foreground"
                 android:id="@+id/filter"/>
+            <item android:title="Create course draft"
+                android:id="@+id/create_course_draft"/>
         </menu>
     </item>
 

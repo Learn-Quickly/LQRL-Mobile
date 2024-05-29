@@ -19,13 +19,15 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
+import com.lqrl.school.web_services.GetUserDataTask;
 
 import java.util.ArrayList;
 
-public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, UsernameFieldSetter {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
+    private TextView helloUsername;
     private String accessToken = "";
 
     @Override
@@ -54,14 +56,14 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         TextView cabinetTitle = findViewById(R.id.cabinet_title);
 
         if (id == R.id.nav_learn) {
-            cabinetTitle.setText("Мої курси");
+            cabinetTitle.setText("Student mode");
             // Precaution of global variable check
             if(drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
             item.setChecked(true);
             return true;
         } else if (id == R.id.nav_create) {
-            cabinetTitle.setText("Creator");
+            cabinetTitle.setText("Creator mode");
             if(drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
             item.setChecked(true);
@@ -84,6 +86,7 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
+        helloUsername = findViewById(R.id.hello_username);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -102,6 +105,8 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         recyclerView.setAdapter(cardAdapter);
 
         registerForContextMenu(navigationView);
+
+        new GetUserDataTask(this, accessToken).execute();
     }
 
     @Override
@@ -109,7 +114,7 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
                                     ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
         MenuInflater inflater = getMenuInflater();
-        inflater.inflate(R.menu.context_menu, menu);
+        inflater.inflate(R.menu.filter_context_menu, menu);
     }
 
     @Override
@@ -125,4 +130,8 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         return super.onContextItemSelected(item);
     }
 
+    @Override
+    public void setUsernameField(String username) {
+        helloUsername.setText("Hello, " + username + "!");
+    }
 }
