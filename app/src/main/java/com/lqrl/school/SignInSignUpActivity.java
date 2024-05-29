@@ -6,6 +6,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.lqrl.school.web_services.ChangePasswordTask;
 import com.lqrl.school.web_services.LoginTask;
 import com.lqrl.school.web_services.RegisterTask;
@@ -18,8 +19,10 @@ public class SignInSignUpActivity extends AppCompatActivity implements TokenSett
 
     private EditText editTextEmail, editTextPassword, editTextNewPassword;
     private Button btnSignIn, btnSignUp, btnChangePassword;
+    private FloatingActionButton fab;
     public String accessToken = "";
     public boolean singInState = false;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -33,15 +36,21 @@ public class SignInSignUpActivity extends AppCompatActivity implements TokenSett
         btnSignUp = findViewById(R.id.btnSignUp);
         btnChangePassword = findViewById(R.id.btnChangePwd);
         btnChangePassword.setOnClickListener(v -> changePassword());
-        btnSignIn.setOnClickListener(v -> {
-            signIn();
-            Intent intent = new Intent(this, CoursesActivity.class);
-            Bundle args = new Bundle();
-            args.putString("access_token", accessToken);
-            intent.putExtras(args);
-            startActivity(intent);
-        });
+        btnSignIn.setOnClickListener(v -> signIn());
         btnSignUp.setOnClickListener(v -> signUp());
+        fab = findViewById(R.id.fab);
+        fab.setOnClickListener(v -> {
+            if(singInState){
+                Intent intent = new Intent(this, CoursesActivity.class);
+                Bundle args = new Bundle();
+                args.putString("access_token", accessToken);
+                intent.putExtras(args);
+                startActivity(intent);
+
+            } else {
+                Toast.makeText(this, "Please, Log in!", Toast.LENGTH_SHORT).show();
+            }
+        });
     }
 
     private void signIn() {
