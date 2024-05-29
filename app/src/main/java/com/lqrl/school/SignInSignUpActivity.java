@@ -19,6 +19,7 @@ public class SignInSignUpActivity extends AppCompatActivity implements TokenSett
     private EditText editTextEmail, editTextPassword, editTextNewPassword;
     private Button btnSignIn, btnSignUp, btnChangePassword;
     public String accessToken = "";
+    public boolean singInState = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +33,14 @@ public class SignInSignUpActivity extends AppCompatActivity implements TokenSett
         btnSignUp = findViewById(R.id.btnSignUp);
         btnChangePassword = findViewById(R.id.btnChangePwd);
         btnChangePassword.setOnClickListener(v -> changePassword());
-        btnSignIn.setOnClickListener(v -> signIn());
+        btnSignIn.setOnClickListener(v -> {
+            signIn();
+            Intent intent = new Intent(this, CoursesActivity.class);
+            Bundle args = new Bundle();
+            args.putString("access_token", accessToken);
+            intent.putExtras(args);
+            startActivity(intent);
+        });
         btnSignUp.setOnClickListener(v -> signUp());
     }
 
@@ -42,13 +50,6 @@ public class SignInSignUpActivity extends AppCompatActivity implements TokenSett
 
         LoginTask loginTask = new LoginTask(this, username, password);
         loginTask.execute();
-
-//        Intent intent = new Intent(this, CoursesActivity.class);
-//        Bundle args = new Bundle();
-//        args.putString("username", username);
-//        args.putString("password", password);
-//        intent.putExtras(args);
-//        startActivity(intent);
     }
 
     private void signUp() {
@@ -60,7 +61,7 @@ public class SignInSignUpActivity extends AppCompatActivity implements TokenSett
     }
 
     private void changePassword(){
-        if(accessToken.isEmpty()){
+        if(!singInState){
             Toast.makeText(this, "Please, Log in.", Toast.LENGTH_SHORT).show();
             return;
         }
@@ -81,14 +82,15 @@ public class SignInSignUpActivity extends AppCompatActivity implements TokenSett
     }
 
     @Override
-    public void setAccessToken(String token) {
-        if(!token.isEmpty()) {
+    public void setSingInStatus(String token, boolean state) {
+        if(state) {
             accessToken = token;
-            Toast.makeText(this, "Bearer: " + accessToken, Toast.LENGTH_SHORT).show();
+            singInState = true;
+            Toast.makeText(this, "Signed in successfully!", Toast.LENGTH_SHORT).show();
 
         } else {
-            Toast.makeText(this, "Empty bearer due to error.", Toast.LENGTH_SHORT).show();
-            accessToken = "";
+            singInState = false;
+            Toast.makeText(this, "Empty token due to an error!", Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -2,7 +2,6 @@ package com.lqrl.school.web_services;
 
 import android.content.Context;
 import android.os.AsyncTask;
-import android.widget.Toast;
 
 import com.lqrl.school.TokenSetter;
 
@@ -18,7 +17,7 @@ import java.util.Base64;
 import org.json.*;
 
 public class LoginTask extends AsyncTask<Void, Void, String> {
-    public String accessToken;
+    public String accessToken = "";
     public String username, password;
     OkHttpClient client = new OkHttpClient();
     TokenSetter context;
@@ -46,6 +45,7 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
                         response.code() + " " + response.message());
             }
             return response.body().string();
+
         } catch (IOException e) {
             System.out.println("Ошибка подключения: " + e);
             return "";
@@ -59,13 +59,15 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
                 JSONObject root = new JSONObject(result);
                 JSONObject res = root.getJSONObject("result");
                 accessToken = res.getString("access_token");
-                context.setAccessToken(accessToken);
+                context.setSingInStatus(accessToken, true);
+
             } catch (JSONException e) {
+                context.setSingInStatus(accessToken, false);
                 throw new RuntimeException(e);
             }
 
         } else {
-            context.setAccessToken("");
+            context.setSingInStatus(accessToken, false);
         }
     }
 }

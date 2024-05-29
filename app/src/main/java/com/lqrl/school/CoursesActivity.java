@@ -1,5 +1,6 @@
 package com.lqrl.school;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
@@ -25,6 +26,7 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
+    private String accessToken = "";
 
     @Override
     public void onBackPressed() {
@@ -75,6 +77,9 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_courses);
+
+        Intent intent = getIntent();
+        this.accessToken = intent.getStringExtra("access_token");
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);

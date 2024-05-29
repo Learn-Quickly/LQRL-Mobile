@@ -25,6 +25,7 @@ public class TestTask extends AsyncTask<String, Void, String>{
             }
             // вывод тела ответа
             return response.body().string();
+
         } catch (IOException e) {
             System.out.println("Ошибка подключения: " + e);
             return "";
