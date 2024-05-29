@@ -1,9 +1,9 @@
 package com.lqrl.school;
 
 public class CardItem {
-    private String courseName;
-    private int courseParticipantsCount;
-    private float coursePrice;
+    private final String courseName;
+    private final int courseParticipantsCount;
+    private final float coursePrice;
 
     public CardItem(String courseName, int courseParticipantsCount, float coursePrice){
         this.courseName = courseName; this.courseParticipantsCount = courseParticipantsCount;

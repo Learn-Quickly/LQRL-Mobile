@@ -6,11 +6,10 @@
     android:gravity="center">
 
     <EditText
-        android:id="@+id/editTextEmail"
+        android:id="@+id/editTextUsername"
         android:layout_width="match_parent"
         android:layout_height="48dp"
-        android:hint="Email"
-        android:inputType="textEmailAddress"
+        android:hint="Username"
         android:layout_marginBottom="8dp"/>
 
     <EditText
@@ -19,7 +18,17 @@
         android:layout_height="48dp"
         android:hint="Password"
         android:inputType="textPassword"
-        android:layout_below="@id/editTextEmail"
+        android:layout_below="@id/editTextUsername"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/editTextNewPassword"
+        android:layout_width="match_parent"
+        android:layout_height="48dp"
+        android:hint="New password"
+        android:inputType="textPassword"
+        android:layout_below="@id/editTextPassword"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="16dp"/>
 
@@ -28,7 +37,7 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Sign In"
-        android:layout_below="@id/editTextPassword"
+        android:layout_below="@id/editTextNewPassword"
         android:layout_marginTop="8dp"/>
 
     <Button
@@ -38,4 +47,13 @@
         android:text="Sign Up"
         android:layout_below="@id/btnSignIn"
         android:layout_marginTop="8dp"/>
+
+    <Button
+        android:id="@+id/btnChangePwd"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Change password"
+        android:layout_below="@id/btnSignUp"
+        android:layout_marginTop="8dp"/>
+
 </RelativeLayout>

@@ -11,7 +11,7 @@ import java.util.ArrayList;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHolder> {
 
-    private ArrayList<CardItem> cardItems;
+    private final ArrayList<CardItem> cardItems;
 
     public CourseAdapter(ArrayList<CardItem> cards){
         this.cardItems = cards;
