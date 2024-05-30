@@ -18,8 +18,8 @@ public class GetUserDataTask extends AsyncTask<Void, Void, String> {
     OkHttpClient client = new OkHttpClient();
     String accessToken;
     UsernameFieldSetter activity;
-    public GetUserDataTask(Context context, String token){
-        activity = (UsernameFieldSetter) context;
+    public GetUserDataTask(UsernameFieldSetter usernameFieldSetter, String token){
+        activity = usernameFieldSetter;
         accessToken = token;
     }
 

@@ -23,11 +23,11 @@ import com.lqrl.school.web_services.GetUserDataTask;
 
 import java.util.ArrayList;
 
-public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, UsernameFieldSetter {
+public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
-    private TextView helloUsername;
+    //private TextView helloUsername;
     private String accessToken = "";
 
     @Override
@@ -86,27 +86,19 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        helloUsername = findViewById(R.id.hello_username);
+        //helloUsername = findViewById(R.id.hello_username);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
-
-        RecyclerView recyclerView = findViewById(R.id.recyclerView);
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
-
-        ArrayList<CardItem> cardItems = new ArrayList<>();
-        cardItems.add(new CardItem("Ведмедик Медик", 272, 0.0f));
-        cardItems.add(new CardItem("Соціологія", 34, 0.0f));
-
-        CourseAdapter cardAdapter = new CourseAdapter(cardItems);
-        recyclerView.setAdapter(cardAdapter);
-
         registerForContextMenu(navigationView);
 
-        new GetUserDataTask(this, accessToken).execute();
+        CoursesListFragment coursesListFragment = new CoursesListFragment(this, accessToken);
+        getSupportFragmentManager().beginTransaction()
+                .add(R.id.fragment_container_view, coursesListFragment)
+                .commit();
     }
 
     @Override
@@ -130,8 +122,4 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         return super.onContextItemSelected(item);
     }
 
-    @Override
-    public void setUsernameField(String username) {
-        helloUsername.setText("Hello, " + username + "!");
-    }
 }
