@@ -24,7 +24,6 @@ public class ChangePasswordTask extends AsyncTask<Void, Void, String> {
         this.oldP = oldP;
         this.newP = newP;
     }
-
     @Override
     protected String doInBackground(Void... voids) {
         MediaType JSON = MediaType.get("application/json; charset=utf-8");

@@ -2,20 +2,20 @@ package com.lqrl.school;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.lqrl.school.interfaces.StringSetter;
 import com.lqrl.school.web_services.ChangePasswordTask;
 import com.lqrl.school.web_services.LoginTask;
 import com.lqrl.school.web_services.RegisterTask;
 
 import androidx.appcompat.app.AppCompatActivity;
-import android.util.Log;
+
 import android.widget.Toast;
 
-public class SignInSignUpActivity extends AppCompatActivity implements TokenSetter {
+public class SignInSignUpActivity extends AppCompatActivity implements StringSetter {
 
     private EditText editTextEmail, editTextPassword, editTextNewPassword;
     private Button btnSignIn, btnSignUp, btnChangePassword;
@@ -91,9 +91,9 @@ public class SignInSignUpActivity extends AppCompatActivity implements TokenSett
     }
 
     @Override
-    public void setSingInStatus(String token, boolean state) {
+    public void setStringState(String src, boolean state) {
         if(state) {
-            accessToken = token;
+            accessToken = src;
             singInState = true;
             Toast.makeText(this, "Signed in successfully!", Toast.LENGTH_SHORT).show();
 

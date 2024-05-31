@@ -8,6 +8,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBarDrawerToggle;
@@ -15,15 +16,13 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
-import androidx.recyclerview.widget.LinearLayoutManager;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.navigation.NavigationView;
-import com.lqrl.school.web_services.GetUserDataTask;
+import com.lqrl.school.fragments.CoursesListFragment;
+import com.lqrl.school.fragments.CreateCourseFragment;
+import com.lqrl.school.interfaces.StringSetter;
 
-import java.util.ArrayList;
-
-public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener {
+public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, StringSetter {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
@@ -70,6 +69,14 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
             return true;
         } else if(id == R.id.filter) {
             openContextMenu(navigationView);
+            return true;
+        } else if(id == R.id.create_course_draft){
+            CreateCourseFragment createCourseFragment = new CreateCourseFragment(this, accessToken);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container_view, createCourseFragment)
+                    .commit();
+            if(drawerLayout.isDrawerOpen(GravityCompat.START))
+                drawerLayout.closeDrawer(GravityCompat.START);
             return true;
         }
         return false;
@@ -122,4 +129,16 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         return super.onContextItemSelected(item);
     }
 
+    @Override
+    public void setStringState(String src, boolean state) {
+        if(state){
+            toast("Course created successfully!");
+        } else {
+            toast("Course already exists!");
+        }
+    }
+
+    private void toast(String s) {
+        Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
 }

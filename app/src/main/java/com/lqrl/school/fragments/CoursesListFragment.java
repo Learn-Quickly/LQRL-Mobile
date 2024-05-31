@@ -1,4 +1,4 @@
-package com.lqrl.school;
+package com.lqrl.school.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
@@ -12,11 +12,15 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lqrl.school.CardItem;
+import com.lqrl.school.CourseAdapter;
+import com.lqrl.school.R;
+import com.lqrl.school.interfaces.StringSetter;
 import com.lqrl.school.web_services.GetUserDataTask;
 
 import java.util.ArrayList;
 
-public class CoursesListFragment extends Fragment implements UsernameFieldSetter{
+public class CoursesListFragment extends Fragment implements StringSetter {
     Context context;
     String accessToken;
     View rootView;
@@ -50,8 +54,8 @@ public class CoursesListFragment extends Fragment implements UsernameFieldSetter
     }
 
     @Override
-    public void setUsernameField(String username) {
+    public void setStringState(String src, boolean state) {
         TextView helloUsername = rootView.findViewById(R.id.hello_username);
-        helloUsername.setText("Hello, " + username + "!");
+        helloUsername.setText("Hello, " + src + "!");
     }
 }

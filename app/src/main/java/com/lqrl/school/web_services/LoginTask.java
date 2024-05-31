@@ -3,7 +3,7 @@ package com.lqrl.school.web_services;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.lqrl.school.TokenSetter;
+import com.lqrl.school.interfaces.StringSetter;
 
 import java.io.IOException;
 
@@ -20,11 +20,11 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
     public String accessToken = "";
     public String username, password;
     OkHttpClient client = new OkHttpClient();
-    TokenSetter context;
+    StringSetter context;
     public LoginTask(Context activity, String username, String password){
         this.username = username;
         this.password = password;
-        this.context = (TokenSetter) activity;
+        this.context = (StringSetter) activity;
     }
 
     @Override
@@ -59,15 +59,15 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
                 JSONObject root = new JSONObject(result);
                 JSONObject res = root.getJSONObject("result");
                 accessToken = res.getString("access_token");
-                context.setSingInStatus(accessToken, true);
+                context.setStringState(accessToken, true);
 
             } catch (JSONException e) {
-                context.setSingInStatus(accessToken, false);
+                context.setStringState(accessToken, false);
                 throw new RuntimeException(e);
             }
 
         } else {
-            context.setSingInStatus(accessToken, false);
+            context.setStringState(accessToken, false);
         }
     }
 }

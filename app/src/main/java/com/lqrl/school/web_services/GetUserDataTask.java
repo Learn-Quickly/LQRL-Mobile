@@ -1,9 +1,8 @@
 package com.lqrl.school.web_services;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
-import com.lqrl.school.UsernameFieldSetter;
+import com.lqrl.school.interfaces.StringSetter;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -17,8 +16,8 @@ import okhttp3.Response;
 public class GetUserDataTask extends AsyncTask<Void, Void, String> {
     OkHttpClient client = new OkHttpClient();
     String accessToken;
-    UsernameFieldSetter activity;
-    public GetUserDataTask(UsernameFieldSetter usernameFieldSetter, String token){
+    StringSetter activity;
+    public GetUserDataTask(StringSetter usernameFieldSetter, String token){
         activity = usernameFieldSetter;
         accessToken = token;
     }
@@ -49,14 +48,14 @@ public class GetUserDataTask extends AsyncTask<Void, Void, String> {
             try {
                 JSONObject rootobj = new JSONObject(result);
                 String username = rootobj.getString("username");
-                activity.setUsernameField(username);
+                activity.setStringState(username, true);
             } catch (JSONException e) {
-                activity.setUsernameField("SERVER ERROR");
+                activity.setStringState("SERVER ERROR", false);
                 throw new RuntimeException(e);
             }
 
         } else {
-            activity.setUsernameField("SERVER ERROR");
+            activity.setStringState("SERVER ERROR", false);
         }
     }
 }

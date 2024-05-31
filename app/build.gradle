@@ -29,6 +29,8 @@ android {
 }
 
 dependencies {
+//    implementation 'com.pes.materialcolorpicker:library:1.2.5'
+    implementation files('libs/library-release.aar')
     def fragment_version = "1.7.1"
     // Java language implementation
     implementation "androidx.fragment:fragment:$fragment_version"
