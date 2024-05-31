@@ -26,8 +26,8 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
-    //private TextView helloUsername;
     private String accessToken = "";
+    private CoursesListFragment coursesListFragment;
 
     @Override
     public void onBackPressed() {
@@ -78,6 +78,8 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
             if(drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
             return true;
+        } else if(id == R.id.refresh_page){
+            coursesListFragment.refreshCourses();
         }
         return false;
     }
@@ -102,7 +104,7 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         navigationView.setNavigationItemSelectedListener(this);
         registerForContextMenu(navigationView);
 
-        CoursesListFragment coursesListFragment = new CoursesListFragment(this, accessToken);
+        coursesListFragment = new CoursesListFragment(this, accessToken);
         getSupportFragmentManager().beginTransaction()
                 .add(R.id.fragment_container_view, coursesListFragment)
                 .commit();

@@ -18,6 +18,8 @@
                 android:id="@+id/filter"/>
             <item android:title="Create course draft"
                 android:id="@+id/create_course_draft"/>
+            <item android:title="Refresh page"
+                android:id="@+id/refresh_page"/>
         </menu>
     </item>
 

@@ -17,6 +17,7 @@ import com.lqrl.school.CourseAdapter;
 import com.lqrl.school.R;
 import com.lqrl.school.interfaces.ArraySetter;
 import com.lqrl.school.interfaces.StringSetter;
+import com.lqrl.school.web_services.GetCreatedCoursesTask;
 import com.lqrl.school.web_services.GetUserDataTask;
 
 import java.util.ArrayList;
@@ -25,6 +26,8 @@ public class CoursesListFragment extends Fragment implements StringSetter, Array
     Context context;
     String accessToken;
     View rootView;
+    CourseAdapter courseAdapter;
+    ArrayList<CourseCardItem> courseCardItems;
 
     public CoursesListFragment(){
 
@@ -40,13 +43,13 @@ public class CoursesListFragment extends Fragment implements StringSetter, Array
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        ArrayList<CourseCardItem> courseCardItems = new ArrayList<>();
+        courseCardItems = new ArrayList<>();
 //        courseCardItems.add(new CourseCardItem("Ведмедик Медик", 272, 0.0f, (int) Color.pack(255,255,255), getString(R.string.lorem)));
 //        courseCardItems.add(new CourseCardItem("Соціологія", 34, 0.0f, (int) Color.pack(255,255,255), getString(R.string.lorem)));
 
-//  TODO  new GetCreatedCoursesTask(context, accessToken).execute();
-        CourseAdapter cardAdapter = new CourseAdapter(courseCardItems);
-        recyclerView.setAdapter(cardAdapter);
+        courseAdapter = new CourseAdapter(courseCardItems);
+        recyclerView.setAdapter(courseAdapter);
+
         rootView = view;
         return view;
     }
@@ -64,6 +67,11 @@ public class CoursesListFragment extends Fragment implements StringSetter, Array
 
     @Override
     public void setArrayList(ArrayList<CourseCardItem> src, boolean ok) {
-        // TODO use returned array to populate adapter
+        courseCardItems.addAll(src);
+        courseAdapter.notifyDataSetChanged();
+    }
+
+    public void refreshCourses() {
+        new GetCreatedCoursesTask(this, accessToken).execute();
     }
 }
