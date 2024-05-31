@@ -6,15 +6,19 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
+import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.lqrl.school.entities.CourseCardItem;
+
 import java.util.ArrayList;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHolder> {
 
-    private final ArrayList<CardItem> cardItems;
+    private final ArrayList<CourseCardItem> courseCardItems;
 
-    public CourseAdapter(ArrayList<CardItem> cards){
-        this.cardItems = cards;
+    public CourseAdapter(ArrayList<CourseCardItem> cards){
+        this.courseCardItems = cards;
     }
 
     @NonNull
@@ -26,28 +30,35 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        CardItem currentItem = cardItems.get(position);
+        CourseCardItem currentItem = courseCardItems.get(position);
 
-        holder.textViewParticipantsCount.setText(Integer.toString(currentItem.getCourseParticipantsCount()));
-        holder.textViewPrice.setText(Float.toString(currentItem.getCoursePrice()));
+        holder.textViewParticipantsCount.setText(String.valueOf(currentItem.getCourseParticipantsCount()));
+        holder.textViewPrice.setText(String.valueOf(currentItem.getCoursePrice()));
         holder.textViewCourseTitle.setText(currentItem.getCourseName());
+        holder.textViewCourseDescription.setText(currentItem.getCourseDescription());
+        //holder.courseCardView.setCardBackgroundColor(currentItem.getCourseColor());
+        // TODO CardView color does not change! Somehow use color property!
     }
 
     @Override
     public int getItemCount() {
-        return cardItems.size();
+        return courseCardItems.size();
     }
 
     public static class CardViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewParticipantsCount;
         public TextView textViewPrice;
         public TextView textViewCourseTitle;
+        public TextView textViewCourseDescription;
+        public CardView courseCardView;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewParticipantsCount = itemView.findViewById(R.id.participants_count);
             textViewPrice = itemView.findViewById(R.id.course_price);
             textViewCourseTitle = itemView.findViewById(R.id.course_name_title);
+            textViewCourseDescription = itemView.findViewById(R.id.course_desc);
+            courseCardView = itemView.findViewById(R.id.course_card_view);
         }
     }
 }
