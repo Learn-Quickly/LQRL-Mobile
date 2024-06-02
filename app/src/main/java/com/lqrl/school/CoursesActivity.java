@@ -23,6 +23,7 @@ import com.lqrl.school.fragments.CreatorCoursesWatchFragment;
 import com.lqrl.school.fragments.CreateCourseFragment;
 import com.lqrl.school.interfaces.CoursePublisher;
 import com.lqrl.school.interfaces.StringSetter;
+import com.lqrl.school.web_services.PublishCourseTask;
 
 public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, StringSetter, CoursePublisher {
     private DrawerLayout drawerLayout;
@@ -143,23 +144,22 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
     @Override
     public void requestPublishCourse(CourseCardItem courseCardItem) {
         if(courseCardItem.getState().equals("Draft")){
-            new PublishCourseDialogFragment(this).show(getSupportFragmentManager(), "PUBLISH_COURSE");
+            new PublishCourseDialogFragment(this, courseCardItem).show(getSupportFragmentManager(), "PUBLISH_COURSE");
         } else if(courseCardItem.getState().equals("Published")){
             // TODO replace fragment lessonswatchfragment
         }
     }
 
     @Override
-    public void approveDialogPublish(boolean approve){
+    public void approveDialogPublish(boolean approve, CourseCardItem courseCardItem){
         if(approve){
-            // TODO new PublishCourseTask(this, accessToken).execute();
+            new PublishCourseTask(this, courseCardItem, accessToken).execute();
         }
     }
 
     @Override
     public void sendPublishStatus(boolean status){
         if(status){
-            // TODO what else?
             creatorCoursesWatchFragment.refreshCourses();
         }
     }
