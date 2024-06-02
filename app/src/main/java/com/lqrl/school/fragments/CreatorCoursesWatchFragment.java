@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -22,17 +23,17 @@ import com.lqrl.school.web_services.GetUserDataTask;
 
 import java.util.ArrayList;
 
-public class CoursesListFragment extends Fragment implements StringSetter, ArraySetter<CourseCardItem> {
+public class CreatorCoursesWatchFragment extends Fragment implements StringSetter, ArraySetter<CourseCardItem> {
     Context context;
     String accessToken;
     View rootView;
     CourseAdapter courseAdapter;
     ArrayList<CourseCardItem> courseCardItems;
 
-    public CoursesListFragment(){
+    public CreatorCoursesWatchFragment(){
 
     }
-    public CoursesListFragment(Context activity, String accessToken){
+    public CreatorCoursesWatchFragment(Context activity, String accessToken){
         context = activity;
         this.accessToken = accessToken;
     }
@@ -44,13 +45,14 @@ public class CoursesListFragment extends Fragment implements StringSetter, Array
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         courseCardItems = new ArrayList<>();
-//        courseCardItems.add(new CourseCardItem("Ведмедик Медик", 272, 0.0f, (int) Color.pack(255,255,255), getString(R.string.lorem)));
-//        courseCardItems.add(new CourseCardItem("Соціологія", 34, 0.0f, (int) Color.pack(255,255,255), getString(R.string.lorem)));
-
-        courseAdapter = new CourseAdapter(courseCardItems);
+        courseAdapter = new CourseAdapter(context, courseCardItems);
         recyclerView.setAdapter(courseAdapter);
 
         rootView = view;
+        Button refreshButton = rootView.findViewById(R.id.creator_course_list_refresh_button);
+        refreshButton.setOnClickListener(v -> {
+            refreshCourses();
+        });
         return view;
     }
 
@@ -67,6 +69,7 @@ public class CoursesListFragment extends Fragment implements StringSetter, Array
 
     @Override
     public void setArrayList(ArrayList<CourseCardItem> src, boolean ok) {
+        courseCardItems.clear();
         courseCardItems.addAll(src);
         courseAdapter.notifyDataSetChanged();
     }

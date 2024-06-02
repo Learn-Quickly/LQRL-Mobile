@@ -1,8 +1,10 @@
 package com.lqrl.school;
 
+import android.content.Context;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -10,15 +12,18 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lqrl.school.entities.CourseCardItem;
+import com.lqrl.school.interfaces.CoursePublisher;
 
 import java.util.ArrayList;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHolder> {
 
     private final ArrayList<CourseCardItem> courseCardItems;
+    private Context activity;
 
-    public CourseAdapter(ArrayList<CourseCardItem> cards){
+    public CourseAdapter(Context activity, ArrayList<CourseCardItem> cards){
         this.courseCardItems = cards;
+        this.activity = activity;
     }
 
     @NonNull
@@ -36,6 +41,9 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
         holder.textViewPrice.setText(String.valueOf(currentItem.getCoursePrice()));
         holder.textViewCourseTitle.setText(currentItem.getCourseName());
         holder.textViewCourseDescription.setText(currentItem.getCourseDescription());
+        holder.learnButton.setOnClickListener(v -> {
+            ((CoursePublisher) activity).requestPublishCourse(currentItem);
+        });
         //holder.courseCardView.setCardBackgroundColor(currentItem.getCourseColor());
         // TODO CardView color does not change! Somehow use color property!
     }
@@ -51,6 +59,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
         public TextView textViewCourseTitle;
         public TextView textViewCourseDescription;
         public CardView courseCardView;
+        public Button learnButton;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -59,6 +68,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
             textViewCourseTitle = itemView.findViewById(R.id.course_name_title);
             textViewCourseDescription = itemView.findViewById(R.id.course_desc);
             courseCardView = itemView.findViewById(R.id.course_card_view);
+            learnButton = itemView.findViewById(R.id.learn_btn);
         }
     }
 }

@@ -7,7 +7,6 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -18,16 +17,19 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.lqrl.school.fragments.CoursesListFragment;
+import com.lqrl.school.dialog.PublishCourseDialogFragment;
+import com.lqrl.school.entities.CourseCardItem;
+import com.lqrl.school.fragments.CreatorCoursesWatchFragment;
 import com.lqrl.school.fragments.CreateCourseFragment;
+import com.lqrl.school.interfaces.CoursePublisher;
 import com.lqrl.school.interfaces.StringSetter;
 
-public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, StringSetter {
+public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, StringSetter, CoursePublisher {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
     private String accessToken = "";
-    private CoursesListFragment coursesListFragment;
+    private CreatorCoursesWatchFragment creatorCoursesWatchFragment;
 
     @Override
     public void onBackPressed() {
@@ -52,17 +54,18 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
     @Override
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
-        TextView cabinetTitle = findViewById(R.id.cabinet_title);
 
         if (id == R.id.nav_learn) {
-            cabinetTitle.setText("Student mode");
             // Precaution of global variable check
             if(drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
             item.setChecked(true);
             return true;
         } else if (id == R.id.nav_create) {
-            cabinetTitle.setText("Creator mode");
+            creatorCoursesWatchFragment = new CreatorCoursesWatchFragment(this, accessToken);
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.fragment_container_view, creatorCoursesWatchFragment)
+                    .commit();
             if(drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
             item.setChecked(true);
@@ -70,16 +73,14 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         } else if(id == R.id.filter) {
             openContextMenu(navigationView);
             return true;
-        } else if(id == R.id.create_course_draft){
+        } else if(id == R.id.create_course_draft) {
             CreateCourseFragment createCourseFragment = new CreateCourseFragment(this, accessToken);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container_view, createCourseFragment)
                     .commit();
-            if(drawerLayout.isDrawerOpen(GravityCompat.START))
+            if (drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
             return true;
-        } else if(id == R.id.refresh_page){
-            coursesListFragment.refreshCourses();
         }
         return false;
     }
@@ -95,7 +96,6 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         Toolbar toolbar = findViewById(R.id.toolbar);
-        //helloUsername = findViewById(R.id.hello_username);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -104,10 +104,6 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         navigationView.setNavigationItemSelectedListener(this);
         registerForContextMenu(navigationView);
 
-        coursesListFragment = new CoursesListFragment(this, accessToken);
-        getSupportFragmentManager().beginTransaction()
-                .add(R.id.fragment_container_view, coursesListFragment)
-                .commit();
     }
 
     @Override
@@ -142,5 +138,29 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
 
     private void toast(String s) {
         Toast.makeText(this, s, Toast.LENGTH_SHORT).show();
+    }
+
+    @Override
+    public void requestPublishCourse(CourseCardItem courseCardItem) {
+        if(courseCardItem.getState().equals("Draft")){
+            new PublishCourseDialogFragment(this).show(getSupportFragmentManager(), "PUBLISH_COURSE");
+        } else if(courseCardItem.getState().equals("Published")){
+            // TODO replace fragment lessonswatchfragment
+        }
+    }
+
+    @Override
+    public void approveDialogPublish(boolean approve){
+        if(approve){
+            // TODO new PublishCourseTask(this, accessToken).execute();
+        }
+    }
+
+    @Override
+    public void sendPublishStatus(boolean status){
+        if(status){
+            // TODO what else?
+            creatorCoursesWatchFragment.refreshCourses();
+        }
     }
 }

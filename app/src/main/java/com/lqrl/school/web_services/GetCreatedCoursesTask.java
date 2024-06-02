@@ -54,8 +54,9 @@ public class GetCreatedCoursesTask extends AsyncTask<Void, Void, String> {
             JSONArray jsonArray = new JSONArray(result);
             for(int i = 0; i < jsonArray.length(); i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                arrayListCourseCardItem.add(new CourseCardItem(jsonObject.getString("title")
-                ,0, (float) jsonObject.getDouble("price"), jsonObject.getInt("color"), jsonObject.getString("description")));
+                arrayListCourseCardItem.add(new CourseCardItem(jsonObject.getInt("id"), jsonObject.getString("title")
+                ,0, (float) jsonObject.getDouble("price"), jsonObject.getInt("color"), jsonObject.getString("description"),
+                        jsonObject.getString("state")));
                 // TODO: web query to get participants count
                 activity.setArrayList(arrayListCourseCardItem, true);
             }
