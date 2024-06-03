@@ -41,7 +41,7 @@ public class SignInSignUpActivity extends AppCompatActivity implements StringSet
         fab = findViewById(R.id.fab);
         fab.setOnClickListener(v -> {
             if(singInState){
-                Intent intent = new Intent(this, CoursesActivity.class);
+                Intent intent = new Intent(this, HomeActivity.class);
                 Bundle args = new Bundle();
                 args.putString("access_token", accessToken);
                 intent.putExtras(args);

@@ -1,4 +1,4 @@
-package com.lqrl.school;
+package com.lqrl.school.adapters;
 
 import android.content.Context;
 import android.view.LayoutInflater;
@@ -9,8 +9,10 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lqrl.school.R;
 import com.lqrl.school.entities.CourseCardItem;
 import com.lqrl.school.interfaces.CoursePublisher;
 
@@ -45,7 +47,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
             ((CoursePublisher) activity).requestPublishCourse(currentItem);
         });
         //holder.courseCardView.setCardBackgroundColor(currentItem.getCourseColor());
-        // TODO CardView color does not change! Somehow use color property!
+        holder.constraintLayout.setBackgroundColor(currentItem.getCourseColor());
     }
 
     @Override
@@ -60,6 +62,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
         public TextView textViewCourseDescription;
         public CardView courseCardView;
         public Button learnButton;
+        public ConstraintLayout constraintLayout;
 
         public CardViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -69,6 +72,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
             textViewCourseDescription = itemView.findViewById(R.id.course_desc);
             courseCardView = itemView.findViewById(R.id.course_card_view);
             learnButton = itemView.findViewById(R.id.learn_btn);
+            constraintLayout = itemView.findViewById(R.id.constraint_layout_course);
         }
     }
 }

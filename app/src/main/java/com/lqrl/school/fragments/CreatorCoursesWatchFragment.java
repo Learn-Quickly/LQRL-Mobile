@@ -14,7 +14,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lqrl.school.entities.CourseCardItem;
-import com.lqrl.school.CourseAdapter;
+import com.lqrl.school.adapters.CourseAdapter;
 import com.lqrl.school.R;
 import com.lqrl.school.interfaces.ArraySetter;
 import com.lqrl.school.interfaces.StringSetter;
@@ -50,9 +50,7 @@ public class CreatorCoursesWatchFragment extends Fragment implements StringSette
 
         rootView = view;
         Button refreshButton = rootView.findViewById(R.id.creator_course_list_refresh_button);
-        refreshButton.setOnClickListener(v -> {
-            refreshCourses();
-        });
+        refreshButton.setOnClickListener(v -> refreshCourses());
         return view;
     }
 

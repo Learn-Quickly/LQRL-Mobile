@@ -25,7 +25,7 @@
             </intent-filter>
         </activity>
 
-        <activity android:name=".CoursesActivity">
+        <activity android:name=".HomeActivity">
             <!-- Add any additional configurations for CoursesActivity here -->
         </activity>
 

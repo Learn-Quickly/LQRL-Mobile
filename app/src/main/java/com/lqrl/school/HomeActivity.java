@@ -19,18 +19,26 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.lqrl.school.dialog.PublishCourseDialogFragment;
 import com.lqrl.school.entities.CourseCardItem;
+import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.CreatorCoursesWatchFragment;
 import com.lqrl.school.fragments.CreateCourseFragment;
+import com.lqrl.school.fragments.LessonsWatchFragment;
 import com.lqrl.school.interfaces.CoursePublisher;
+import com.lqrl.school.interfaces.LessonOpener;
 import com.lqrl.school.interfaces.StringSetter;
 import com.lqrl.school.web_services.PublishCourseTask;
 
-public class CoursesActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener, StringSetter, CoursePublisher {
+public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
+        StringSetter,
+        CoursePublisher,
+        LessonOpener {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
     private String accessToken = "";
     private CreatorCoursesWatchFragment creatorCoursesWatchFragment;
+    private LessonsWatchFragment lessonsWatchFragment;
+
 
     @Override
     public void onBackPressed() {
@@ -146,7 +154,10 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         if(courseCardItem.getState().equals("Draft")){
             new PublishCourseDialogFragment(this, courseCardItem).show(getSupportFragmentManager(), "PUBLISH_COURSE");
         } else if(courseCardItem.getState().equals("Published")){
-            // TODO replace fragment lessonswatchfragment
+              lessonsWatchFragment = new LessonsWatchFragment(this, accessToken, courseCardItem);
+              getSupportFragmentManager().beginTransaction()
+                                .replace(R.id.fragment_container_view, lessonsWatchFragment)
+                                .commit();
         }
     }
 
@@ -162,5 +173,10 @@ public class CoursesActivity extends AppCompatActivity implements NavigationView
         if(status){
             creatorCoursesWatchFragment.refreshCourses();
         }
+    }
+
+    @Override
+    public void requestOpenLesson(Lesson lesson) {
+
     }
 }

@@ -51,8 +51,10 @@ public class GetCreatedCoursesTask extends AsyncTask<Void, Void, String> {
     protected void onPostExecute(String result){
         ArrayList<CourseCardItem> arrayListCourseCardItem = new ArrayList<>();
         try {
-            JSONArray jsonArray = new JSONArray(result);
-            for(int i = 0; i < jsonArray.length(); i++){
+            JSONObject jsonRoot = new JSONObject(result);
+            JSONArray jsonArray = jsonRoot.getJSONArray("courses");
+            int count = jsonRoot.getInt("count");
+            for(int i = 0; i < count; i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
                 arrayListCourseCardItem.add(new CourseCardItem(jsonObject.getInt("id"), jsonObject.getString("title")
                 ,0, (float) jsonObject.getDouble("price"), jsonObject.getInt("color"), jsonObject.getString("description"),
@@ -62,7 +64,7 @@ public class GetCreatedCoursesTask extends AsyncTask<Void, Void, String> {
             }
 
         } catch (JSONException e) {
-            activity.setArrayList(null, false);
+            activity.setArrayList(arrayListCourseCardItem, false);
             throw new RuntimeException(e);
         }
     }
