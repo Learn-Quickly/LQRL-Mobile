@@ -71,10 +71,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             item.setChecked(true);
             return true;
         } else if (id == R.id.nav_create) {
-            creatorCoursesWatchFragment = new CreatorCoursesWatchFragment(this, accessToken);
-            getSupportFragmentManager().beginTransaction()
-                    .replace(R.id.fragment_container_view, creatorCoursesWatchFragment)
-                    .commit();
+            launchCreatorCoursesWatchFragment();
             if(drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
             item.setChecked(true);
@@ -92,6 +89,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         return false;
+    }
+
+    private void launchCreatorCoursesWatchFragment() {
+        creatorCoursesWatchFragment = new CreatorCoursesWatchFragment(this, accessToken);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, creatorCoursesWatchFragment)
+                .commit();
     }
 
     @Override
@@ -112,6 +116,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
         registerForContextMenu(navigationView);
+
+        launchCreatorCoursesWatchFragment();
 
     }
 
@@ -154,10 +160,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if(courseCardItem.getState().equals("Draft")){
             new PublishCourseDialogFragment(this, courseCardItem).show(getSupportFragmentManager(), "PUBLISH_COURSE");
         } else if(courseCardItem.getState().equals("Published")){
-              lessonsWatchFragment = new LessonsWatchFragment(this, accessToken, courseCardItem);
-              getSupportFragmentManager().beginTransaction()
-                                .replace(R.id.fragment_container_view, lessonsWatchFragment)
-                                .commit();
+            launchLessonsFragment(courseCardItem);
         }
     }
 
@@ -165,7 +168,17 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public void approveDialogPublish(boolean approve, CourseCardItem courseCardItem){
         if(approve){
             new PublishCourseTask(this, courseCardItem, accessToken).execute();
+            launchLessonsFragment(courseCardItem);
+        } else {
+            launchLessonsFragment(courseCardItem);
         }
+    }
+
+    private void launchLessonsFragment(CourseCardItem courseCardItem) {
+        lessonsWatchFragment = new LessonsWatchFragment(this, accessToken, courseCardItem);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, lessonsWatchFragment)
+                .commit();
     }
 
     @Override

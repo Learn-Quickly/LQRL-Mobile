@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/cabinet_title"
-        android:text="Choose mode"
+        android:text="Creator mode"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         style="@style/TextAppearance.AppCompat.Headline"

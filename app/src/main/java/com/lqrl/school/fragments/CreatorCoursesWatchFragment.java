@@ -57,6 +57,7 @@ public class CreatorCoursesWatchFragment extends Fragment implements StringSette
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
         new GetUserDataTask(this, accessToken).execute();
+        refreshCourses();
     }
 
     @Override
