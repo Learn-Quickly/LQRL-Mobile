@@ -15,25 +15,29 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.lqrl.school.R;
 import com.lqrl.school.adapters.LessonAdapter;
-import com.lqrl.school.entities.CourseCardItem;
+import com.lqrl.school.dialogs.LessonCreateDialogFragment;
+import com.lqrl.school.entities.Course;
 import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.interfaces.ArraySetter;
+import com.lqrl.school.interfaces.LessonCreator;
 import com.lqrl.school.interfaces.LessonOpener;
-import com.lqrl.school.interfaces.LessonsRefresher;
-import com.lqrl.school.web_services.GetUserDataTask;
+import com.lqrl.school.web_services.CreateLessonTask;
+import com.lqrl.school.web_services.DeleteLessonTask;
 import com.lqrl.school.web_services.RefreshLessonTask;
 
 import java.util.ArrayList;
 
-public class LessonsWatchFragment extends Fragment implements ArraySetter<Lesson> {
+public class LessonsWatchFragment extends Fragment implements ArraySetter<Lesson>,
+        LessonCreator,
+        LessonOpener {
     Context activity;
     String accessToken;
     LessonAdapter lessonAdapter;
     ArrayList<Lesson> lessons;
-    CourseCardItem courseCardItem;
+    Course course;
 
-    public LessonsWatchFragment(Context context, String accessToken, CourseCardItem courseCardItem){
-        this.activity = context; this.accessToken = accessToken; this.courseCardItem = courseCardItem;
+    public LessonsWatchFragment(Context context, String accessToken, Course course){
+        this.activity = context; this.accessToken = accessToken; this.course = course;
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -43,20 +47,24 @@ public class LessonsWatchFragment extends Fragment implements ArraySetter<Lesson
         RecyclerView recyclerView = view.findViewById(R.id.lessonsRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
         lessons = new ArrayList<>();
-        lessonAdapter = new LessonAdapter(activity, lessons);
+        lessonAdapter = new LessonAdapter(activity, lessons, this);
         recyclerView.setAdapter(lessonAdapter);
         refreshLessons.setOnClickListener(v -> {
-            new RefreshLessonTask(courseCardItem, activity, accessToken, this).execute();
+            refreshList();
         });
         createLessons.setOnClickListener(v -> {
-
+            new LessonCreateDialogFragment(this, activity).show(getChildFragmentManager(), "CREATE_LESSON");
         });
         return view;
     }
 
+    public void refreshList() {
+        new RefreshLessonTask(course, activity, accessToken, this).execute();
+    }
+
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
-        new RefreshLessonTask(courseCardItem, activity, accessToken, this).execute();
+        refreshList();
     }
 
     @Override
@@ -70,5 +78,22 @@ public class LessonsWatchFragment extends Fragment implements ArraySetter<Lesson
             Toast.makeText(activity, "Network or server error", Toast.LENGTH_SHORT).show();
         }
 
+    }
+
+    @Override
+    public void sendLessonEntity(Lesson lesson) {
+        lesson.CourseId = course.getCourseId();
+        new CreateLessonTask(activity, this, lesson, accessToken).execute();
+    }
+
+    @Override
+    public void requestOpenLesson(Lesson lesson) {
+        // TODO
+    }
+
+    @Override
+    public void requestDeleteLesson(int lessonId) {
+        new DeleteLessonTask(activity, this, accessToken, lessonId).execute();
+        refreshList();
     }
 }

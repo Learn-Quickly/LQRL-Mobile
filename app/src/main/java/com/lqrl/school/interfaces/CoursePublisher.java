@@ -1,9 +1,9 @@
 package com.lqrl.school.interfaces;
 
-import com.lqrl.school.entities.CourseCardItem;
+import com.lqrl.school.entities.Course;
 
 public interface CoursePublisher {
-    void requestPublishCourse(CourseCardItem courseCardItem);
-    void approveDialogPublish(boolean approve, CourseCardItem courseCardItem);
+    void requestPublishCourse(Course course);
+    void approveDialogPublish(boolean approve, Course course);
     void sendPublishStatus(boolean status);
 }

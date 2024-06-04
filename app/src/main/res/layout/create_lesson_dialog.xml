@@ -1,0 +1,65 @@
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/ll_lesson_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lesson title"
+            android:id="@+id/tv_lesson_title"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_margin="10dp"/>
+
+        <EditText
+            android:layout_margin="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:id="@+id/et_lesson_title"
+            android:hint="Title..."
+            style="@style/TextAppearance.Material3.BodyLarge"
+            app:layout_constraintLeft_toRightOf="@id/tv_lesson_title"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_lesson_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/ll_lesson_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Lesson description"
+            android:id="@+id/tv_lesson_desc"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_margin="10dp"/>
+
+        <EditText
+            android:layout_margin="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/et_lesson_desc"
+            android:hint="Description..."
+            android:inputType="text|textMultiLine"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            app:layout_constraintLeft_toRightOf="@id/tv_lesson_title"
+            app:layout_constraintTop_toTopOf="parent"/>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

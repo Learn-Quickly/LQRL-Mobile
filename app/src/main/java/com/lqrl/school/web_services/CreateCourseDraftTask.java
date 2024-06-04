@@ -60,7 +60,7 @@ public class CreateCourseDraftTask extends AsyncTask<Void, Void, String> {
         try (Response response = client.newCall(createCourse).execute()) {
             if (!response.isSuccessful()) {
                 throw new IOException("Запрос к серверу не был успешен: " +
-                        response.code() + " " + response.message() + response.body().string());
+                     response.code() + " " + response.message() + response.body().string());
             }
             return response.body().string();
 

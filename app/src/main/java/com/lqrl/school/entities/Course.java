@@ -1,6 +1,6 @@
 package com.lqrl.school.entities;
 
-public class CourseCardItem {
+public class Course {
     private final String courseName;
     private final int courseParticipantsCount;
     private final float coursePrice;
@@ -9,7 +9,7 @@ public class CourseCardItem {
     private final int courseId;
     private final String state;
 
-    public CourseCardItem(int courseId, String courseName, int courseParticipantsCount, float coursePrice, int color, String courseDescription, String state){
+    public Course(int courseId, String courseName, int courseParticipantsCount, float coursePrice, int color, String courseDescription, String state){
         this.courseName = courseName; this.courseParticipantsCount = courseParticipantsCount;
         this.coursePrice = coursePrice; this.color = color; this.courseDescription = courseDescription;
         this.courseId = courseId; this.state = state;

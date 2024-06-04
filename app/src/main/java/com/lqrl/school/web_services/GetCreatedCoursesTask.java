@@ -1,9 +1,8 @@
 package com.lqrl.school.web_services;
 
-import android.content.Context;
 import android.os.AsyncTask;
 
-import com.lqrl.school.entities.CourseCardItem;
+import com.lqrl.school.entities.Course;
 import com.lqrl.school.interfaces.ArraySetter;
 
 import org.json.JSONArray;
@@ -18,10 +17,10 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 public class GetCreatedCoursesTask extends AsyncTask<Void, Void, String> {
-    ArraySetter<CourseCardItem> activity;
+    ArraySetter<Course> activity;
     String accessToken;
     OkHttpClient client = new OkHttpClient();
-    public GetCreatedCoursesTask(ArraySetter<CourseCardItem> context, String accessToken){
+    public GetCreatedCoursesTask(ArraySetter<Course> context, String accessToken){
         this.activity = context;
         this.accessToken = accessToken;
     }
@@ -49,22 +48,22 @@ public class GetCreatedCoursesTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result){
-        ArrayList<CourseCardItem> arrayListCourseCardItem = new ArrayList<>();
+        ArrayList<Course> arrayListCourse = new ArrayList<>();
         try {
             JSONObject jsonRoot = new JSONObject(result);
             JSONArray jsonArray = jsonRoot.getJSONArray("courses");
             int count = jsonRoot.getInt("count");
             for(int i = 0; i < count; i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                arrayListCourseCardItem.add(new CourseCardItem(jsonObject.getInt("id"), jsonObject.getString("title")
+                arrayListCourse.add(new Course(jsonObject.getInt("id"), jsonObject.getString("title")
                 ,0, (float) jsonObject.getDouble("price"), jsonObject.getInt("color"), jsonObject.getString("description"),
                         jsonObject.getString("state")));
                 // TODO: web query to get participants count
-                activity.setArrayList(arrayListCourseCardItem, true);
+                activity.setArrayList(arrayListCourse, true);
             }
 
         } catch (JSONException e) {
-            activity.setArrayList(arrayListCourseCardItem, false);
+            activity.setArrayList(arrayListCourse, false);
             throw new RuntimeException(e);
         }
     }

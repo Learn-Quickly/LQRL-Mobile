@@ -17,21 +17,18 @@ import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
 
 import com.google.android.material.navigation.NavigationView;
-import com.lqrl.school.dialog.PublishCourseDialogFragment;
-import com.lqrl.school.entities.CourseCardItem;
-import com.lqrl.school.entities.Lesson;
+import com.lqrl.school.dialogs.PublishCourseDialogFragment;
+import com.lqrl.school.entities.Course;
 import com.lqrl.school.fragments.CreatorCoursesWatchFragment;
 import com.lqrl.school.fragments.CreateCourseFragment;
 import com.lqrl.school.fragments.LessonsWatchFragment;
 import com.lqrl.school.interfaces.CoursePublisher;
-import com.lqrl.school.interfaces.LessonOpener;
 import com.lqrl.school.interfaces.StringSetter;
 import com.lqrl.school.web_services.PublishCourseTask;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         StringSetter,
-        CoursePublisher,
-        LessonOpener {
+        CoursePublisher {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
@@ -156,26 +153,26 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void requestPublishCourse(CourseCardItem courseCardItem) {
-        if(courseCardItem.getState().equals("Draft")){
-            new PublishCourseDialogFragment(this, courseCardItem).show(getSupportFragmentManager(), "PUBLISH_COURSE");
-        } else if(courseCardItem.getState().equals("Published")){
-            launchLessonsFragment(courseCardItem);
+    public void requestPublishCourse(Course course) {
+        if(course.getState().equals("Draft")){
+            new PublishCourseDialogFragment(this, course).show(getSupportFragmentManager(), "PUBLISH_COURSE");
+        } else if(course.getState().equals("Published")){
+            launchLessonsFragment(course);
         }
     }
 
     @Override
-    public void approveDialogPublish(boolean approve, CourseCardItem courseCardItem){
+    public void approveDialogPublish(boolean approve, Course course){
         if(approve){
-            new PublishCourseTask(this, courseCardItem, accessToken).execute();
-            launchLessonsFragment(courseCardItem);
+            new PublishCourseTask(this, course, accessToken).execute();
+            launchLessonsFragment(course);
         } else {
-            launchLessonsFragment(courseCardItem);
+            launchLessonsFragment(course);
         }
     }
 
-    private void launchLessonsFragment(CourseCardItem courseCardItem) {
-        lessonsWatchFragment = new LessonsWatchFragment(this, accessToken, courseCardItem);
+    private void launchLessonsFragment(Course course) {
+        lessonsWatchFragment = new LessonsWatchFragment(this, accessToken, course);
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_view, lessonsWatchFragment)
                 .commit();
@@ -186,10 +183,5 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         if(status){
             creatorCoursesWatchFragment.refreshCourses();
         }
-    }
-
-    @Override
-    public void requestOpenLesson(Lesson lesson) {
-
     }
 }

@@ -13,7 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.lqrl.school.entities.CourseCardItem;
+import com.lqrl.school.entities.Course;
 import com.lqrl.school.adapters.CourseAdapter;
 import com.lqrl.school.R;
 import com.lqrl.school.interfaces.ArraySetter;
@@ -23,12 +23,12 @@ import com.lqrl.school.web_services.GetUserDataTask;
 
 import java.util.ArrayList;
 
-public class CreatorCoursesWatchFragment extends Fragment implements StringSetter, ArraySetter<CourseCardItem> {
+public class CreatorCoursesWatchFragment extends Fragment implements StringSetter, ArraySetter<Course> {
     Context context;
     String accessToken;
     View rootView;
     CourseAdapter courseAdapter;
-    ArrayList<CourseCardItem> courseCardItems;
+    ArrayList<Course> courses;
 
     public CreatorCoursesWatchFragment(){
 
@@ -44,8 +44,8 @@ public class CreatorCoursesWatchFragment extends Fragment implements StringSette
         RecyclerView recyclerView = view.findViewById(R.id.recyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
-        courseCardItems = new ArrayList<>();
-        courseAdapter = new CourseAdapter(context, courseCardItems);
+        courses = new ArrayList<>();
+        courseAdapter = new CourseAdapter(context, courses);
         recyclerView.setAdapter(courseAdapter);
 
         rootView = view;
@@ -67,9 +67,9 @@ public class CreatorCoursesWatchFragment extends Fragment implements StringSette
     }
 
     @Override
-    public void setArrayList(ArrayList<CourseCardItem> src, boolean ok) {
-        courseCardItems.clear();
-        courseCardItems.addAll(src);
+    public void setArrayList(ArrayList<Course> src, boolean ok) {
+        courses.clear();
+        courses.addAll(src);
         courseAdapter.notifyDataSetChanged();
     }
 

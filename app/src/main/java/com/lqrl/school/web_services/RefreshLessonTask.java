@@ -3,7 +3,7 @@ package com.lqrl.school.web_services;
 import android.content.Context;
 import android.os.AsyncTask;
 
-import com.lqrl.school.entities.CourseCardItem;
+import com.lqrl.school.entities.Course;
 import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.LessonsWatchFragment;
 
@@ -14,10 +14,8 @@ import org.json.JSONObject;
 import java.io.IOException;
 import java.util.ArrayList;
 
-import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
-import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class RefreshLessonTask extends AsyncTask<Void, Void, String> {
@@ -25,9 +23,9 @@ public class RefreshLessonTask extends AsyncTask<Void, Void, String> {
     String accessToken;
     LessonsWatchFragment lessonsWatchFragment;
     OkHttpClient client = new OkHttpClient();
-    CourseCardItem course;
+    Course course;
 
-    public RefreshLessonTask(CourseCardItem course, Context context, String accessToken, LessonsWatchFragment lessonsWatchFragment){
+    public RefreshLessonTask(Course course, Context context, String accessToken, LessonsWatchFragment lessonsWatchFragment){
         activity = context;
         this.accessToken = accessToken;
         this.lessonsWatchFragment = lessonsWatchFragment;
@@ -63,7 +61,11 @@ public class RefreshLessonTask extends AsyncTask<Void, Void, String> {
             JSONArray jsonArray = new JSONArray(result);
             for(int i = 0; i < jsonArray.length(); i++){
                 JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Lesson tmp = new Lesson(jsonObject.getString("title"), jsonObject.getString("description"), jsonObject.getInt("course_id"));
+                Lesson tmp = new Lesson(
+                        jsonObject.getInt("id"),
+                        jsonObject.getString("title"),
+                        jsonObject.getString("description"),
+                        jsonObject.getInt("course_id"));
                 lessonArrayList.add(tmp);
             }
             lessonsWatchFragment.setArrayList(lessonArrayList, true);

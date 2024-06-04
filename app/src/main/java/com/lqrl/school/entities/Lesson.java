@@ -4,8 +4,10 @@ public class Lesson {
     public String Title;
     public String Description;
     public int CourseId;
+    public int Id;
 
-    public Lesson(String title, String description, int courseId){
+    public Lesson(int id, String title, String description, int courseId){
+        Id = id;
         Title = title;
         Description = description;
         CourseId = courseId;

@@ -12,9 +12,8 @@ import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lqrl.school.R;
-import com.lqrl.school.entities.CourseCardItem;
 import com.lqrl.school.entities.Lesson;
-import com.lqrl.school.interfaces.CoursePublisher;
+import com.lqrl.school.fragments.LessonsWatchFragment;
 import com.lqrl.school.interfaces.LessonOpener;
 
 import java.util.ArrayList;
@@ -23,10 +22,12 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
 
     private final ArrayList<Lesson> lessonsList;
     private Context activity;
+    private LessonsWatchFragment lessonsWatchFragment;
 
-    public LessonAdapter(Context activity, ArrayList<Lesson> lessons){
+    public LessonAdapter(Context activity, ArrayList<Lesson> lessons, LessonsWatchFragment lessonsWatchFragment){
         this.lessonsList = lessons;
         this.activity = activity;
+        this.lessonsWatchFragment = lessonsWatchFragment;
     }
 
     @NonNull
@@ -43,7 +44,10 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
         holder.textViewTitle.setText(currentItem.Title);
         holder.textViewDescription.setText(currentItem.Description);
         holder.openButton.setOnClickListener(v -> {
-            ((LessonOpener)activity).requestOpenLesson(currentItem);
+            ((LessonOpener)lessonsWatchFragment).requestOpenLesson(currentItem);
+        });
+        holder.deleteButton.setOnClickListener(v -> {
+            ((LessonOpener)lessonsWatchFragment).requestDeleteLesson(currentItem.Id);
         });
     }
 
@@ -57,6 +61,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
         public TextView textViewDescription;
         public CardView lessonCardView;
         public Button openButton;
+        public Button deleteButton;
 
         public LessonViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -64,6 +69,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
             textViewDescription = itemView.findViewById(R.id.lesson_desc);
             lessonCardView = itemView.findViewById(R.id.lesson_card_view);
             openButton = itemView.findViewById(R.id.lesson_open_btn);
+            deleteButton = itemView.findViewById(R.id.lesson_delete_btn);
         }
     }
 }

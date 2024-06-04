@@ -13,18 +13,18 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lqrl.school.R;
-import com.lqrl.school.entities.CourseCardItem;
+import com.lqrl.school.entities.Course;
 import com.lqrl.school.interfaces.CoursePublisher;
 
 import java.util.ArrayList;
 
 public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHolder> {
 
-    private final ArrayList<CourseCardItem> courseCardItems;
+    private final ArrayList<Course> courses;
     private Context activity;
 
-    public CourseAdapter(Context activity, ArrayList<CourseCardItem> cards){
-        this.courseCardItems = cards;
+    public CourseAdapter(Context activity, ArrayList<Course> cards){
+        this.courses = cards;
         this.activity = activity;
     }
 
@@ -37,7 +37,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
 
     @Override
     public void onBindViewHolder(@NonNull CardViewHolder holder, int position) {
-        CourseCardItem currentItem = courseCardItems.get(position);
+        Course currentItem = courses.get(position);
 
         holder.textViewParticipantsCount.setText(String.valueOf(currentItem.getCourseParticipantsCount()));
         holder.textViewPrice.setText(String.valueOf(currentItem.getCoursePrice()));
@@ -52,7 +52,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
 
     @Override
     public int getItemCount() {
-        return courseCardItems.size();
+        return courses.size();
     }
 
     public static class CardViewHolder extends RecyclerView.ViewHolder {
