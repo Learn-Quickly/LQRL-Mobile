@@ -20,6 +20,7 @@ import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.interfaces.ArraySetter;
 import com.lqrl.school.interfaces.ExerciseCreator;
 import com.lqrl.school.dialogs.ExerciseCreateDialogFragment;
+import com.lqrl.school.web_services.RefreshExercisesTask;
 
 import java.util.ArrayList;
 
@@ -55,7 +56,7 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
     }
 
     private void refreshList() {
-        // TODO сделал ли Юра нужный endpoint? Сделать AsyncTask
+        new RefreshExercisesTask(lesson, activity, accessToken, this).execute();
     }
 
     @Override
@@ -68,7 +69,6 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
         } else {
             Toast.makeText(activity, "Network or server error", Toast.LENGTH_SHORT).show();
         }
-
     }
 
     @Override
@@ -76,6 +76,7 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
         exercise.LessonId = lesson.Id;
         //new CreateLessonTask(activity, this, lesson, accessToken).execute();
         // TODO сделать CreateExerciseTask
+        Toast.makeText(activity, "debug: Exercise created", Toast.LENGTH_SHORT).show();
     }
 
     @Override

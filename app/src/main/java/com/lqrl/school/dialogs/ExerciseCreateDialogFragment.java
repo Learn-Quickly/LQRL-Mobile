@@ -51,7 +51,7 @@ public class ExerciseCreateDialogFragment extends DialogFragment {
                         Toast.makeText(activity, "Field title is empty.", Toast.LENGTH_SHORT).show();
                         dismiss();
                     }
-                    ((ExerciseCreator) fragment).sendExerciseEntity(new Exercise(-1, title, description, -1, completionTime, difficulty));
+                    ((ExerciseCreator) fragment).sendExerciseEntity(new Exercise(-1, title, description, -1, completionTime, difficulty, null, null));
                 })
                 .setNegativeButton("Cancel", (dialog, which) -> {
 
