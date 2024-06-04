@@ -19,22 +19,27 @@ import androidx.drawerlayout.widget.DrawerLayout;
 import com.google.android.material.navigation.NavigationView;
 import com.lqrl.school.dialogs.PublishCourseDialogFragment;
 import com.lqrl.school.entities.Course;
-import com.lqrl.school.fragments.CreatorCoursesWatchFragment;
+import com.lqrl.school.entities.Lesson;
+import com.lqrl.school.fragments.CoursesWatchFragment;
 import com.lqrl.school.fragments.CreateCourseFragment;
+import com.lqrl.school.fragments.ExercisesWatchFragment;
 import com.lqrl.school.fragments.LessonsWatchFragment;
 import com.lqrl.school.interfaces.CoursePublisher;
+import com.lqrl.school.interfaces.LessonOpener;
 import com.lqrl.school.interfaces.StringSetter;
 import com.lqrl.school.web_services.PublishCourseTask;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         StringSetter,
-        CoursePublisher {
+        CoursePublisher,
+        LessonOpener {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
     private String accessToken = "";
-    private CreatorCoursesWatchFragment creatorCoursesWatchFragment;
+    private CoursesWatchFragment coursesWatchFragment;
     private LessonsWatchFragment lessonsWatchFragment;
+    private ExercisesWatchFragment exercisesWatchFragment;
 
 
     @Override
@@ -89,9 +94,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     private void launchCreatorCoursesWatchFragment() {
-        creatorCoursesWatchFragment = new CreatorCoursesWatchFragment(this, accessToken);
+        coursesWatchFragment = new CoursesWatchFragment(this, accessToken);
         getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_view, creatorCoursesWatchFragment)
+                .replace(R.id.fragment_container_view, coursesWatchFragment)
                 .commit();
     }
 
@@ -178,10 +183,22 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
     }
 
+    private void launchExercisesFragment(Lesson lesson) {
+        exercisesWatchFragment = new ExercisesWatchFragment(this, accessToken, lesson);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, exercisesWatchFragment)
+                .commit();
+    }
+
     @Override
     public void sendPublishStatus(boolean status){
         if(status){
-            creatorCoursesWatchFragment.refreshCourses();
+            coursesWatchFragment.refreshCourses();
         }
+    }
+
+    @Override
+    public void requestOpenLesson(Lesson lesson) {
+        launchExercisesFragment(lesson);
     }
 }

@@ -6,5 +6,5 @@ import java.util.ArrayList;
 
 public interface LessonOpener {
     void requestOpenLesson(Lesson lesson);
-    void requestDeleteLesson(int lessonId);
+
 }

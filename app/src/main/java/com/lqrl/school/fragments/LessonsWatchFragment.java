@@ -20,7 +20,7 @@ import com.lqrl.school.entities.Course;
 import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.interfaces.ArraySetter;
 import com.lqrl.school.interfaces.LessonCreator;
-import com.lqrl.school.interfaces.LessonOpener;
+import com.lqrl.school.interfaces.LessonDeleter;
 import com.lqrl.school.web_services.CreateLessonTask;
 import com.lqrl.school.web_services.DeleteLessonTask;
 import com.lqrl.school.web_services.RefreshLessonTask;
@@ -29,7 +29,7 @@ import java.util.ArrayList;
 
 public class LessonsWatchFragment extends Fragment implements ArraySetter<Lesson>,
         LessonCreator,
-        LessonOpener {
+        LessonDeleter {
     Context activity;
     String accessToken;
     LessonAdapter lessonAdapter;
@@ -41,7 +41,7 @@ public class LessonsWatchFragment extends Fragment implements ArraySetter<Lesson
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
-        View view = inflater.inflate(R.layout.creator_lessons, parent, false);
+        View view = inflater.inflate(R.layout.creator_lessons_fragment, parent, false);
         Button refreshLessons = view.findViewById(R.id.creator_lessons_list_refresh_button);
         Button createLessons = view.findViewById(R.id.creator_create_lesson_btn);
         RecyclerView recyclerView = view.findViewById(R.id.lessonsRecyclerView);
@@ -84,11 +84,6 @@ public class LessonsWatchFragment extends Fragment implements ArraySetter<Lesson
     public void sendLessonEntity(Lesson lesson) {
         lesson.CourseId = course.getCourseId();
         new CreateLessonTask(activity, this, lesson, accessToken).execute();
-    }
-
-    @Override
-    public void requestOpenLesson(Lesson lesson) {
-        // TODO
     }
 
     @Override

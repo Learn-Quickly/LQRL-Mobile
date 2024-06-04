@@ -1,0 +1,114 @@
+<androidx.constraintlayout.widget.ConstraintLayout android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <LinearLayout
+        android:id="@+id/ll_exercise_title"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exercise title"
+            android:id="@+id/tv_exercise_title"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_margin="10dp"/>
+
+        <EditText
+            android:layout_margin="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:id="@+id/et_exercise_title"
+            android:hint="Title..."
+            style="@style/TextAppearance.Material3.BodyLarge"/>
+    </LinearLayout>
+
+
+    <LinearLayout
+        android:id="@+id/ll_exercise_description"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/ll_exercise_title"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exercise description"
+            android:id="@+id/tv_exercise_desc"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_margin="10dp"/>
+
+        <EditText
+            android:layout_margin="0dp"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:id="@+id/et_exercise_desc"
+            android:hint="Description..."
+            android:inputType="text|textMultiLine"
+            style="@style/TextAppearance.Material3.BodyLarge"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_exercise_difficulty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/ll_exercise_description"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exercise difficulty 💪🏻"
+            android:id="@+id/tv_exercise_difficulty"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_margin="10dp"/>
+
+        <EditText
+            android:layout_margin="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:id="@+id/et_exercise_difficulty"
+            android:hint="Difficulty..."
+            style="@style/TextAppearance.Material3.BodyLarge"/>
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/ll_exercise_time"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/ll_exercise_difficulty"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_vertical">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Exercise time 🕐"
+            android:id="@+id/tv_exercise_time"
+            style="@style/TextAppearance.Material3.BodyLarge"
+            android:layout_margin="10dp"/>
+
+        <EditText
+            android:layout_margin="0dp"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:id="@+id/et_exercise_time"
+            android:hint="Seconds..."
+            android:inputType="number"
+            style="@style/TextAppearance.Material3.BodyLarge"/>
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

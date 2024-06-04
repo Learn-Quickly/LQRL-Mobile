@@ -23,17 +23,17 @@ import com.lqrl.school.web_services.GetUserDataTask;
 
 import java.util.ArrayList;
 
-public class CreatorCoursesWatchFragment extends Fragment implements StringSetter, ArraySetter<Course> {
+public class CoursesWatchFragment extends Fragment implements StringSetter, ArraySetter<Course> {
     Context context;
     String accessToken;
     View rootView;
     CourseAdapter courseAdapter;
     ArrayList<Course> courses;
 
-    public CreatorCoursesWatchFragment(){
+    public CoursesWatchFragment(){
 
     }
-    public CreatorCoursesWatchFragment(Context activity, String accessToken){
+    public CoursesWatchFragment(Context activity, String accessToken){
         context = activity;
         this.accessToken = accessToken;
     }

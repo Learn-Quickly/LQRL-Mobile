@@ -14,6 +14,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.lqrl.school.R;
 import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.LessonsWatchFragment;
+import com.lqrl.school.interfaces.LessonDeleter;
 import com.lqrl.school.interfaces.LessonOpener;
 
 import java.util.ArrayList;
@@ -44,10 +45,10 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
         holder.textViewTitle.setText(currentItem.Title);
         holder.textViewDescription.setText(currentItem.Description);
         holder.openButton.setOnClickListener(v -> {
-            ((LessonOpener)lessonsWatchFragment).requestOpenLesson(currentItem);
+            ((LessonOpener)activity).requestOpenLesson(currentItem);
         });
         holder.deleteButton.setOnClickListener(v -> {
-            ((LessonOpener)lessonsWatchFragment).requestDeleteLesson(currentItem.Id);
+            ((LessonDeleter)lessonsWatchFragment).requestDeleteLesson(currentItem.Id);
         });
     }
 
