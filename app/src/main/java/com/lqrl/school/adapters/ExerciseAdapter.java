@@ -17,6 +17,7 @@ import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.ExercisesWatchFragment;
 import com.lqrl.school.interfaces.LessonDeleter;
 import com.lqrl.school.interfaces.LessonOpener;
+import com.lqrl.school.interfaces.NoteBuilderDealer;
 
 import java.util.ArrayList;
 
@@ -46,7 +47,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         holder.textViewTitle.setText(currentItem.Title);
         holder.textViewDescription.setText(currentItem.Description);
         holder.goBuilderButton.setOnClickListener(v -> {
-            // TODO enter note builder
+            ((NoteBuilderDealer)activity).goToBuilder();
         });
     }
 

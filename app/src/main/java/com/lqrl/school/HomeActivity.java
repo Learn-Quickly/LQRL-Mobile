@@ -24,15 +24,18 @@ import com.lqrl.school.fragments.CoursesWatchFragment;
 import com.lqrl.school.fragments.CreateCourseFragment;
 import com.lqrl.school.fragments.ExercisesWatchFragment;
 import com.lqrl.school.fragments.LessonsWatchFragment;
+import com.lqrl.school.fragments.NoteBuilderFragment;
 import com.lqrl.school.interfaces.CoursePublisher;
 import com.lqrl.school.interfaces.LessonOpener;
+import com.lqrl.school.interfaces.NoteBuilderDealer;
 import com.lqrl.school.interfaces.StringSetter;
 import com.lqrl.school.web_services.PublishCourseTask;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         StringSetter,
         CoursePublisher,
-        LessonOpener {
+        LessonOpener,
+        NoteBuilderDealer {
     private DrawerLayout drawerLayout;
     private ActionBarDrawerToggle actionBarDrawerToggle;
     private NavigationView navigationView;
@@ -40,6 +43,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private CoursesWatchFragment coursesWatchFragment;
     private LessonsWatchFragment lessonsWatchFragment;
     private ExercisesWatchFragment exercisesWatchFragment;
+    private NoteBuilderFragment noteBuilderFragment;
 
 
     @Override
@@ -78,7 +82,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 drawerLayout.closeDrawer(GravityCompat.START);
             item.setChecked(true);
             return true;
-        } else if(id == R.id.filter) {
+        }
+        else if(id == R.id.nav_builder){
+            launchNoteBuilderFragment();
+            if(drawerLayout.isDrawerOpen(GravityCompat.START))
+                drawerLayout.closeDrawer(GravityCompat.START);
+            item.setChecked(true);
+            return true;
+        }
+        else if(id == R.id.filter) {
             openContextMenu(navigationView);
             return true;
         } else if(id == R.id.create_course_draft) {
@@ -119,8 +131,8 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         registerForContextMenu(navigationView);
 
-        launchCreatorCoursesWatchFragment();
-
+        //launchCreatorCoursesWatchFragment();
+        launchNoteBuilderFragment();
     }
 
     @Override
@@ -190,6 +202,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 .commit();
     }
 
+    private void launchNoteBuilderFragment(){
+        noteBuilderFragment = new NoteBuilderFragment(this);
+        getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, noteBuilderFragment)
+                .commit();
+    }
+
     @Override
     public void sendPublishStatus(boolean status){
         if(status){
@@ -200,5 +219,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void requestOpenLesson(Lesson lesson) {
         launchExercisesFragment(lesson);
+    }
+
+    @Override
+    public void goToBuilder() {
+        launchNoteBuilderFragment();
     }
 }

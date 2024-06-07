@@ -9,6 +9,10 @@
         <item
             android:id="@+id/nav_create"
             android:title="Create" />
+
+        <item
+            android:id="@+id/nav_builder"
+            android:title="Enter builder"/>
     </group>
 
     <item android:title="Tools">
