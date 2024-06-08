@@ -31,6 +31,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     private ArrayList<Node> nodes;
     private ArrayList<Line> lines;
     private Paint nodeTextPaint;
+    private Paint linePaint;
 
     public NoteBuilderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -49,7 +50,12 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         nodeTextPaint.setTextSize(50.0f);
         nodeTextPaint.setStrokeWidth(3.0f);
         nodeTextPaint.setStyle(Paint.Style.FILL);
-        //nodeTextPaint.setShadowLayer(5.0f, 10.0f, 10.0f, Color.BLACK);
+
+        linePaint = new Paint();
+        linePaint.setColor(Color.RED);
+        linePaint.setAntiAlias(true);
+        linePaint.setStyle(Paint.Style.STROKE);
+        linePaint.setStrokeWidth(5.0f);
 
         gestureDetector = new GestureDetector(context, this);
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
@@ -62,8 +68,9 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         invalidate();
     }
 
-    public void drawConnection(Line line){
-
+    public void drawLine(Line line){
+        lines.add(line);
+        invalidate();
     }
 
     @Override
@@ -79,6 +86,10 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
             renderNode(canvas, nodes.get(i));
         }
 
+        for(int i = 0; i < lines.size(); i++){
+            renderLine(canvas, lines.get(i));
+        }
+
         canvas.restore();
     }
 
@@ -86,6 +97,74 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         renderNodeBlock(canvas, node);
         renderNodeTitle(canvas, node);
         renderNodeDescriptionWidthAligned(canvas, node);
+    }
+
+    private void renderLine(Canvas canvas, Line line){
+        Path linePath = new Path();
+        linePath.moveTo(line.bX, line.bY);
+        linePath.lineTo(line.eX, line.eY);
+        canvas.drawPath(linePath, linePaint);
+
+        float lineVectorX = line.eX - line.bX;
+        float lineVectorY = line.eY - line.bY;
+
+        float searchOffsetCoeff = 10f;
+
+        float triangleHeightGroundXPoint = line.eX - (lineVectorX / searchOffsetCoeff);
+        float triangleHeightGroundYPoint = line.eY - (lineVectorY / searchOffsetCoeff);
+
+        float heightSearchBeginLineXPoint = triangleHeightGroundXPoint - (lineVectorX / (2 * searchOffsetCoeff));
+        float heightSearchBeginLineYPoint = triangleHeightGroundYPoint - (lineVectorY / (2 * searchOffsetCoeff));
+
+        float heightSearchEndLineXPoint = triangleHeightGroundXPoint + (lineVectorX / (2 * searchOffsetCoeff));
+        float heightSearchEndLineYPoint = triangleHeightGroundYPoint + (lineVectorY / (2 * searchOffsetCoeff));
+
+        float parallelLinePixelOffset = 30f;
+
+        float hypotenuseLineVector = (float) Math.sqrt((lineVectorX * lineVectorX) + (lineVectorY * lineVectorY));
+        float sinCoeff = lineVectorY / hypotenuseLineVector;
+        float cosCoeff = lineVectorX / hypotenuseLineVector;
+
+        float parallelLineSearchHeightBeginX = heightSearchBeginLineXPoint + sinCoeff * parallelLinePixelOffset;
+        float parallelLineSearchHeightBeginY = heightSearchBeginLineYPoint + cosCoeff * parallelLinePixelOffset;
+
+        float parallelLineSearchHeightEndX = heightSearchEndLineXPoint + sinCoeff * parallelLinePixelOffset;
+        float parallelLineSearchHeightEndY = heightSearchEndLineYPoint + cosCoeff * parallelLinePixelOffset;
+
+        float shortestLine = Float.MAX_VALUE;
+
+        float hX = triangleHeightGroundXPoint, hY = triangleHeightGroundYPoint;
+        float stepX = lineVectorX / (10 * searchOffsetCoeff);
+        float stepY = lineVectorY / (10 * searchOffsetCoeff);
+        float sX = parallelLineSearchHeightBeginX;
+        float sY = parallelLineSearchHeightBeginY;
+        float minX = 0, minY = 0;
+
+        while ((sX != parallelLineSearchHeightEndX) && (sY != parallelLineSearchHeightEndY)) {
+            float lineLen = (float) Math.sqrt((sX - hX) * (sX - hX) + (sY - hY) * (sY - hY));
+            if(shortestLine > lineLen) {
+                shortestLine = lineLen;
+                minX = sX; minY = sY;
+            }
+            sX += stepX;
+            sY += stepY;
+        }
+
+        float heightVectorX = minX - hX;
+        float heightVectorY = minY - hY;
+
+        float rightFinalPointX = hX + heightVectorX;
+        float rightFinalPointY = hY + heightVectorY;
+
+        float leftFinalPointX = hX - heightVectorX;
+        float leftFinalPointY = hY - heightVectorY;
+
+        Path arrowPath = new Path();
+        arrowPath.moveTo(line.eX, line.eY);
+        arrowPath.lineTo(rightFinalPointX, rightFinalPointY);
+        arrowPath.moveTo(leftFinalPointX, leftFinalPointY);
+        arrowPath.lineTo(line.eX, line.eY);
+        canvas.drawPath(arrowPath, linePaint);
     }
 
     private void renderNodeBlock(Canvas canvas, Node node){

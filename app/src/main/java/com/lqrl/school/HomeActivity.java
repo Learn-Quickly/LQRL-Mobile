@@ -131,8 +131,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         navigationView.setNavigationItemSelectedListener(this);
         registerForContextMenu(navigationView);
 
-        //launchCreatorCoursesWatchFragment();
-        launchNoteBuilderFragment();
+        launchCreatorCoursesWatchFragment();
     }
 
     @Override

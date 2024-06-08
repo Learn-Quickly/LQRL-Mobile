@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
 
 import com.lqrl.school.R;
+import com.lqrl.school.note_builder.Line;
 import com.lqrl.school.note_builder.Node;
 import com.lqrl.school.note_builder.NoteBuilderView;
 
@@ -26,6 +27,16 @@ public class NoteBuilderFragment extends Fragment {
         View root = inflater.inflate(R.layout.note_builder_fragment, parent, false);
         NoteBuilderView noteBuilderView = root.findViewById(R.id.diagramView);
         noteBuilderView.drawNode(new Node("Psychology", getString(R.string.lorem), new RectF(100, 100, 700, 500)));
+        noteBuilderView.drawLine(new Line(700, 500, 900, 100));
+        noteBuilderView.drawLine(new Line(700, 500, 100, 700));
+        noteBuilderView.drawLine(new Line(700, 500, 900, 900));
+        noteBuilderView.drawLine(new Line(700, 500, 1000, 400));
+        noteBuilderView.drawLine(new Line(700, 500, 200, 200));
+        noteBuilderView.drawLine(new Line(700, 500, 1000, 450));
+        noteBuilderView.drawLine(new Line(700, 500, 750, 100));
+        noteBuilderView.drawLine(new Line(700, 500, 100, 100));
+//        noteBuilderView.drawLine(new Line(700, 500, 900, 700));
+//        noteBuilderView.drawLine(new Line(700, 500, 500, 300));
         return root;
     }
 }
