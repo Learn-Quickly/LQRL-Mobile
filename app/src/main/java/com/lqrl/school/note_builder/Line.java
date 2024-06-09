@@ -18,6 +18,8 @@ public class Line {
     }
 
     public Line(Node n1, Node n2){
-
+        this.n1 = n1; this.n2 = n2;
+        bX = n1.xBegin; bY = n1.yBegin;
+        eX = n2.xBegin; eY = n2.yBegin;
     }
 }

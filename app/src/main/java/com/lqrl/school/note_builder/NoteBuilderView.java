@@ -17,6 +17,10 @@ import android.view.View;
 
 import androidx.annotation.NonNull;
 
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 
 public class NoteBuilderView extends View implements GestureDetector.OnGestureListener {
@@ -47,8 +51,8 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         nodeTextPaint = new Paint();
         nodeTextPaint.setAntiAlias(true);
         nodeTextPaint.setColor(0xFF000000);
-        nodeTextPaint.setTextSize(50.0f);
-        nodeTextPaint.setStrokeWidth(3.0f);
+        nodeTextPaint.setTextSize(20.0f);
+        nodeTextPaint.setStrokeWidth(1.0f);
         nodeTextPaint.setStyle(Paint.Style.FILL);
 
         linePaint = new Paint();
@@ -61,6 +65,75 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         scaleGestureDetector = new ScaleGestureDetector(context, new ScaleListener());
         nodes = new ArrayList<>();
         lines = new ArrayList<>();
+    }
+
+//    String testJSON = "{\"connections\": [{\"from": "Node_1488" // Node id
+//      "to": "Node_228" // Node id
+//    }
+//  ],
+//  "nodes": [
+//      {
+//        "id": "Node_1488",
+//        "x": 56,
+//        "y": -34,
+//        "node_type": "Definition",
+//        "body": {
+//          "header": "",
+//          "definition": ""
+//        }
+//      }
+//  ]
+//}
+//";
+
+    public void drawFromJSON(String json){
+        nodes.clear();
+        lines.clear();
+        try{
+            JSONObject root = new JSONObject(json);
+            JSONArray nodesJSON = root.getJSONArray("nodes");
+            for(int i = 0; i < nodesJSON.length(); i++){
+                JSONObject nodeObj = nodesJSON.getJSONObject(i);
+                String id = nodeObj.getString("id");
+                int x = nodeObj.getInt("x");
+                int y = nodeObj.getInt("y");
+                String node_type = nodeObj.getString("node_type");
+                String header = "", definition = "";
+                JSONObject bodyObj = nodeObj.getJSONObject("body");
+                if(node_type.equals("Definition")){
+                    header = bodyObj.getString("header");
+                    definition = bodyObj.getString("definition");
+                } else if(node_type.equals("Header")){
+                    header = bodyObj.getString("header");
+                }
+                Node node = new Node(id, header, definition, x, y);
+                nodes.add(node);
+            }
+
+            JSONArray connectionsJSON = root.getJSONArray("connections");
+            for(int i = 0; i < connectionsJSON.length(); i++){
+                JSONObject lineObj = connectionsJSON.getJSONObject(i);
+                String from = lineObj.getString("from");
+                String to = lineObj.getString("to");
+                Node n1 = findNodeById(from);
+                Node n2 = findNodeById(to);
+                if(n1 != null && n2 != null){
+                    Line line = new Line(n1, n2);
+                    lines.add(line);
+                }
+            }
+
+        } catch(JSONException e){
+            throw new RuntimeException(e);
+        }
+        invalidate();
+    }
+
+    private Node findNodeById(String id){
+        for(int i = 0; i < nodes.size(); i++){
+            if(nodes.get(i).id.equals(id)) return nodes.get(i);
+        }
+        return null;
     }
 
     public void drawNode(Node node){
@@ -176,8 +249,8 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     }
 
     private void renderNodeTitle(Canvas canvas, Node node){
-        nodeTextPaint.setTextSize(50.0f);
-        nodeTextPaint.setStrokeWidth(3.0f);
+        nodeTextPaint.setTextSize(30.0f);
+        nodeTextPaint.setStrokeWidth(2.0f);
         drawRectCenteredString(canvas, node.title,
                 new RectF(node.rect.left,
                         node.rect.top,
@@ -201,10 +274,10 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     }
 
     private void renderNodeDescriptionWidthAligned(Canvas canvas, Node node){
-        nodeTextPaint.setTextSize(40.0f);
+        nodeTextPaint.setTextSize(30.0f);
         nodeTextPaint.setStrokeWidth(2.0f);
-        float descriptionPaddingPx = 30f;
-        float lineSpacingPx = 10f;
+        float descriptionPaddingPx = 10f;
+        float lineSpacingPx = 20f;
         float maxLineWidthPx = node.rect.width() - 2 * descriptionPaddingPx;
         float textHeight;
         Rect textBounds = new Rect();
@@ -229,6 +302,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
                 currentLineWidth = nodeTextPaint.measureText(currentLine.toString());
                 hitMaxInside = currentLineWidth > maxLineWidthPx;
             }
+            wordIndex--;
             // drawText
             float titleHeight = node.rect.height() / 4f;
 
