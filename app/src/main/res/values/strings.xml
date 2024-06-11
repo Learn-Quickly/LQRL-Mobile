@@ -4,9 +4,40 @@
     <string name="drawer_close">Drawer close</string>
     <string name="lorem">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
     <string name="irraz_ner_title">Рішення ірраціональних нерівностей</string>
-    <string name="irraz_ner_def">Нерівність, що містить змінну під знаком кореня N-го-ступеня</string>
-    <string name="isp_ravn_preobr_title">Використ. рівнос. перетв.</string>
-    <string name="isp_ravn_preobr_def">на ОДЗ вихідного</string>
-    <string name="isp_meth_intervalov_title">Використ. методу інтервалів</string>
+    <string name="irraz_ner_def">Нерівність, що містить змінну під знаком кореня N-го ступеня</string>
+    <string name="isp_ravn_preobr_title">Використання рівносильних перетворень</string>
+    <string name="isp_ravn_preobr_def">на ОДЗ вихідної нерівності</string>
+    <string name="isp_meth_intervalov_title">Використання методу інтервалів</string>
     <string name="isp_meth_intervalov_def">для нерівностей виду f(x) &lt;&gt; 0</string>
+    <string name="test_diagram1">
+{
+   "connections":[
+      {
+         "from":"Node_1",
+         "to":"Node_2"
+      }
+        ],
+   "nodes":[
+      {
+         "id":"Node_1",
+         "x":140,
+         "y":140,
+         "node_type":"Definition",
+         "body":{
+            "header":"Філософія",
+            "definition":"Наука"
+         }
+      },
+      {
+         "id":"Node_2",
+         "x":300,
+         "y":800,
+         "node_type":"Definition",
+         "body":{
+            "header": "Topic",
+            "definition":"Definition"
+         }
+      }
+   ]
+}</string>
 </resources>

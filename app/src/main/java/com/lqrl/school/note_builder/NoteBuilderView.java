@@ -6,14 +6,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 
@@ -36,6 +37,11 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     private ArrayList<Line> lines;
     private Paint nodeTextPaint;
     private Paint linePaint;
+
+    // TODO resize node mode
+
+    // TODO fix canvas translation
+    // UPD fixed move node after scroll
 
     public NoteBuilderView(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -66,25 +72,6 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         nodes = new ArrayList<>();
         lines = new ArrayList<>();
     }
-
-//    String testJSON = "{\"connections\": [{\"from": "Node_1488" // Node id
-//      "to": "Node_228" // Node id
-//    }
-//  ],
-//  "nodes": [
-//      {
-//        "id": "Node_1488",
-//        "x": 56,
-//        "y": -34,
-//        "node_type": "Definition",
-//        "body": {
-//          "header": "",
-//          "definition": ""
-//        }
-//      }
-//  ]
-//}
-//";
 
     public void drawFromJSON(String json){
         nodes.clear();
@@ -150,7 +137,13 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     protected void onDraw(@NonNull Canvas canvas) {
         super.onDraw(canvas);
 
-        // Apply scaling and translation
+        canvas.save();
+        canvas.scale(scaleFactor, scaleFactor);
+
+        renderGrid(canvas);
+
+        canvas.restore();
+
         canvas.save();
         canvas.scale(scaleFactor, scaleFactor);
         canvas.translate(scrollX, scrollY);
@@ -164,6 +157,23 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         }
 
         canvas.restore();
+    }
+
+    private void renderGrid(Canvas canvas) {
+        float canvasWidth = canvas.getWidth() / scaleFactor;
+        float canvasHeight = canvas.getHeight() / scaleFactor;
+        float gridColumnMargin = canvasWidth / 10f * scaleFactor * scaleFactor;
+        float gridRowMargin = canvasHeight / 10f * scaleFactor * scaleFactor;
+        Paint paintGrid = new Paint();
+        paintGrid.setColor(Color.GRAY);
+        paintGrid.setColor(0xffacacac);
+        paintGrid.setAntiAlias(true);
+        paintGrid.setStrokeWidth(3 * scaleFactor);
+        paintGrid.setStyle(Paint.Style.STROKE);
+        for(float startX = gridColumnMargin; startX < canvasWidth; startX += gridColumnMargin)
+            canvas.drawLine(startX, 0, startX, canvasHeight, paintGrid);
+        for(float startY = gridRowMargin; startY < canvasHeight; startY += gridRowMargin)
+            canvas.drawLine(0, startY, canvasWidth, startY, paintGrid);
     }
 
     private void renderNode(Canvas canvas, Node node) {
@@ -213,7 +223,15 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         float sY = parallelLineSearchHeightBeginY;
         float minX = 0, minY = 0;
 
-        while ((sX != parallelLineSearchHeightEndX) && (sY != parallelLineSearchHeightEndY)) {
+        boolean isMinusStepX = stepX < 0;
+        boolean isMinusStepY = stepY < 0;
+        boolean condUntilX, condUntilY;
+        if(isMinusStepX) condUntilX = sX >= parallelLineSearchHeightEndX;
+        else condUntilX = sX <= parallelLineSearchHeightEndX;
+        if(isMinusStepY) condUntilY = sY >= parallelLineSearchHeightEndY;
+        else condUntilY = sY <= parallelLineSearchHeightEndY;
+
+        while (condUntilX && condUntilY) {
             float lineLen = (float) Math.sqrt((sX - hX) * (sX - hX) + (sY - hY) * (sY - hY));
             if(shortestLine > lineLen) {
                 shortestLine = lineLen;
@@ -221,6 +239,11 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
             }
             sX += stepX;
             sY += stepY;
+
+            if(isMinusStepX) condUntilX = sX >= parallelLineSearchHeightEndX;
+            else condUntilX = sX <= parallelLineSearchHeightEndX;
+            if(isMinusStepY) condUntilY = sY >= parallelLineSearchHeightEndY;
+            else condUntilY = sY <= parallelLineSearchHeightEndY;
         }
 
         float heightVectorX = minX - hX;
@@ -248,16 +271,6 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         canvas.drawPath(pathHeader, paint);
     }
 
-    private void renderNodeTitle(Canvas canvas, Node node){
-        nodeTextPaint.setTextSize(30.0f);
-        nodeTextPaint.setStrokeWidth(2.0f);
-        drawRectCenteredString(canvas, node.title,
-                new RectF(node.rect.left,
-                        node.rect.top,
-                        node.rect.left + node.rect.width(),
-                        node.rect.top + node.rect.height() / 4f));
-    }
-
     private void drawRectCenteredString(Canvas canvas, String text, RectF rect){
         Rect headerRect = new Rect();
         nodeTextPaint.getTextBounds(text, 0, text.length(), headerRect);
@@ -273,10 +286,50 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         canvas.drawText(text, xTextBegin, yTextBegin, nodeTextPaint);
     }
 
+    private void renderNodeTitle(Canvas canvas, Node node){
+        nodeTextPaint.setTextSize(30.0f);
+        nodeTextPaint.setStrokeWidth(2.0f);
+        float titlePaddingPx = 5f;
+        float lineSpacingPx = 10f;
+        float maxLineWidthPx = node.rect.width() - 2 * titlePaddingPx;
+        float textHeight;
+        Rect textBounds = new Rect();
+        nodeTextPaint.getTextBounds(node.title, 0, node.title.length(), textBounds);
+        textHeight = textBounds.height();
+        int maxLinesCount = (int) ((node.rect.height() - 2 * titlePaddingPx - lineSpacingPx)
+                / (textHeight + lineSpacingPx));
+        //int maxLinesCount = 20;
+        float currentLineWidth;
+        String[] words = node.title.split(" ");
+        int wordIndex = 0; int lineIndex = 0;
+
+        StringBuilder currentLine = new StringBuilder();
+        String lastCopy = null;
+        while(lineIndex < maxLinesCount){
+            if(wordIndex == words.length) break;
+            currentLine.setLength(0);
+            while(wordIndex < words.length){
+                currentLine.append(words[wordIndex++]);
+                currentLine.append(" ");
+                currentLineWidth = nodeTextPaint.measureText(currentLine.toString());
+                if(currentLineWidth > maxLineWidthPx){
+                    wordIndex--;
+                    break;
+                } else {
+                    lastCopy = currentLine.toString();
+                }
+            }
+
+            // drawText
+            renderNodeText(canvas, node, titlePaddingPx, textHeight, lineSpacingPx, lineIndex, maxLineWidthPx, lastCopy, Float.MAX_VALUE);
+            lineIndex++;
+        }
+    }
+
     private void renderNodeDescriptionWidthAligned(Canvas canvas, Node node){
         nodeTextPaint.setTextSize(30.0f);
         nodeTextPaint.setStrokeWidth(2.0f);
-        float descriptionPaddingPx = 10f;
+        float descriptionPaddingPx = 30f;
         float lineSpacingPx = 20f;
         float maxLineWidthPx = node.rect.width() - 2 * descriptionPaddingPx;
         float textHeight;
@@ -285,41 +338,55 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         textHeight = textBounds.height();
         int maxLinesCount = (int) ((node.rect.height() - 2 * descriptionPaddingPx - lineSpacingPx)
                         / (textHeight + lineSpacingPx));
-        float currentLineWidth = 0f;
+        //int maxLinesCount = 20;
+        float currentLineWidth;
         String[] words = node.description.split(" ");
         int wordIndex = 0; int lineIndex = 0;
 
-        StringBuilder currentLine = new StringBuilder(); boolean hitMaxInside = false;
+        StringBuilder currentLine = new StringBuilder();
         String lastCopy = null;
         while(lineIndex < maxLinesCount){
             if(wordIndex == words.length) break;
-            hitMaxInside = false;
             currentLine.setLength(0);
-            while(!hitMaxInside && wordIndex < words.length){
-                lastCopy = currentLine.toString();
+            while(wordIndex < words.length){
                 currentLine.append(words[wordIndex++]);
                 currentLine.append(" ");
                 currentLineWidth = nodeTextPaint.measureText(currentLine.toString());
-                hitMaxInside = currentLineWidth > maxLineWidthPx;
+                if(currentLineWidth > maxLineWidthPx){
+                    wordIndex--;
+                    break;
+                } else {
+                    lastCopy = currentLine.toString();
+                }
             }
-            wordIndex--;
-            // drawText
-            float titleHeight = node.rect.height() / 4f;
 
-            float xBeginLine = descriptionPaddingPx + node.rect.left;
-            float yBeginLine = node.rect.top
-                    + titleHeight
-                    + descriptionPaddingPx
-                    + (textHeight + lineSpacingPx) * lineIndex;
-            float xEndLine = xBeginLine + maxLineWidthPx;
-            float yEndLine = yBeginLine + textHeight;
-            drawRectCenteredString(canvas, lastCopy,
-                    new RectF(xBeginLine,
-                            yBeginLine,
-                            xEndLine,
-                            yEndLine));
+            renderNodeText(canvas, node, descriptionPaddingPx, textHeight, lineSpacingPx, lineIndex, maxLineWidthPx, lastCopy, 4);
             lineIndex++;
         }
+    }
+
+    private void renderNodeText(Canvas canvas, Node node, float textPaddingPx, float textHeight,
+                                float lineSpacingPx, int lineIndex, float maxLineWidthPx, String lastCopy,
+                                float offsetFract) {
+        float heightOffset;
+        if(offsetFract == Float.MAX_VALUE){
+            heightOffset = 0;
+        } else {
+            heightOffset = node.rect.height() / offsetFract;
+        }
+
+        float xBeginLine = textPaddingPx + node.rect.left;
+        float yBeginLine = node.rect.top
+                + heightOffset
+                + textPaddingPx
+                + (textHeight + lineSpacingPx) * lineIndex;
+        float xEndLine = xBeginLine + maxLineWidthPx;
+        float yEndLine = yBeginLine + textHeight;
+        drawRectCenteredString(canvas, lastCopy,
+                new RectF(xBeginLine,
+                        yBeginLine,
+                        xEndLine,
+                        yEndLine));
     }
 
     @Override
@@ -340,14 +407,55 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        // Handle single tap
+        Log.d("onSingleTap", "X: " + e.getX() + "; Y: " + e.getY());
         return true;
+    }
+
+    // TODO do not cross with another node, causing bug!
+
+    RectF getTransformedRect(RectF rect){
+        RectF rectF = new RectF(rect);
+        rectF.left *= scaleFactor;
+        rectF.top *= scaleFactor;
+        rectF.right *= scaleFactor;
+        rectF.bottom *= scaleFactor;
+        rectF.left += scrollX;
+        rectF.top += scrollY;
+        rectF.right += scrollX;
+        rectF.bottom += scrollY;
+        return rectF;
+    }
+
+    boolean handleNodeMove(MotionEvent e, float distanceX, float distanceY){
+        float touchX = e.getX(), touchY = e.getY();
+        for(int i = 0; i < nodes.size(); i++){
+            Node node = nodes.get(i);
+            RectF transRect = getTransformedRect(node.rect);
+
+            if(touchX >= transRect.left && touchX <= transRect.right
+                && touchY >= transRect.top && touchY <= transRect.bottom)
+            {
+                node.rect.left -= distanceX / scaleFactor;
+                node.rect.right -= distanceX / scaleFactor;
+                node.rect.top -= distanceY / scaleFactor;
+                node.rect.bottom -= distanceY / scaleFactor;
+
+                for (Line line: lines) {
+                    line.reCalculateLinks();
+                }
+                return true;
+            }
+        }
+        return false;
     }
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        scrollX -= distanceX / scaleFactor;
-        scrollY -= distanceY / scaleFactor;
+        if(!handleNodeMove(e2, distanceX, distanceY)){
+            scrollX -= distanceX / scaleFactor;
+            scrollY -= distanceY / scaleFactor;
+        }
+
         invalidate();
         return true;
     }

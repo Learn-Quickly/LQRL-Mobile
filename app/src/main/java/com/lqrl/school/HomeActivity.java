@@ -44,6 +44,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private LessonsWatchFragment lessonsWatchFragment;
     private ExercisesWatchFragment exercisesWatchFragment;
     private NoteBuilderFragment noteBuilderFragment;
+    private Toolbar toolbar;
 
 
     @Override
@@ -122,7 +123,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
-        Toolbar toolbar = findViewById(R.id.toolbar);
+        toolbar = findViewById(R.id.toolbar);
 
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
@@ -132,6 +133,21 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         registerForContextMenu(navigationView);
 
         launchCreatorCoursesWatchFragment();
+    }
+
+    public void addToolbarNoteBuilderButtons() {
+        toolbar.inflateMenu(R.menu.note_builder_toolbar);
+        toolbar.post(() -> {
+            MenuItem addNodeButton = toolbar.getMenu().findItem(R.id.add_node_dialog);
+            addNodeButton.setOnMenuItemClickListener(v -> {
+                Toast.makeText(this, "Hello toolbar", Toast.LENGTH_SHORT).show();
+                return true;
+            });
+        });
+    }
+
+    public void clearToolbarMenu(){
+        toolbar.getMenu().clear();
     }
 
     @Override
@@ -206,6 +222,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_view, noteBuilderFragment)
                 .commit();
+        //addToolbarNoteBuilderButtons();
     }
 
     @Override
