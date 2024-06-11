@@ -25,7 +25,7 @@
          "node_type":"Definition",
          "body":{
             "header":"Філософія",
-            "definition":"Наука"
+            "definition":"Наука_про_життя_людей_з_давніх_давен_його_існування"
          }
       },
       {
@@ -34,8 +34,8 @@
          "y":800,
          "node_type":"Definition",
          "body":{
-            "header": "Topic",
-            "definition":"Definition"
+            "header": "Ейдоси_Платона",
+            "definition":"трактується_як_фіксація_або_організація_речі_що_перебуває_в_чуттєвому_континуумі"
          }
       }
    ]

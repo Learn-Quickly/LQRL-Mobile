@@ -9,6 +9,7 @@ public class Node {
     public String id;
     public int xBegin, yBegin;
     public RectF rect;
+    public boolean anchors = false;
 
     public Node(String id, String title, String description, int xBegin, int yBegin){
         this.title = title; this.description = description;
