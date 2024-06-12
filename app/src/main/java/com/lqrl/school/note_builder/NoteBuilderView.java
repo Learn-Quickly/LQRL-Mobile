@@ -6,6 +6,8 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.Point;
+import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
@@ -17,6 +19,8 @@ import android.view.View;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import com.lqrl.school.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -142,7 +146,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         canvas.translate(scrollX, scrollY);
 
         for (int i = 0; i < nodes.size(); i++) {
-            renderNode(canvas, nodes.get(i));
+            renderNode(canvas, nodes.get(i), 40f);
         }
 
         for (int i = 0; i < lines.size(); i++) {
@@ -169,10 +173,10 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
             canvas.drawLine(0, startY, canvasWidth, startY, paintGrid);
     }
 
-    private void renderNode(Canvas canvas, Node node) {
+    private void renderNode(Canvas canvas, Node node, float fontSize) {
         renderNodeBlock(canvas, node);
-        renderNodeTitle(canvas, node);
-        renderNodeDescriptionWidthAligned(canvas, node);
+        renderNodeTitle(canvas, node, fontSize);
+        renderNodeDescriptionWidthAligned(canvas, node, fontSize);
         renderNodeAnchors(canvas, node);
     }
 
@@ -281,9 +285,9 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         canvas.drawText(text, xTextBegin, yTextBegin, nodeTextPaint);
     }
 
-    private void renderNodeTitle(Canvas canvas, Node node) {
-        nodeTextPaint.setTextSize(30.0f);
-        nodeTextPaint.setStrokeWidth(2.0f);
+    private void renderNodeTitle(Canvas canvas, Node node, float fontSize) {
+        nodeTextPaint.setTextSize(fontSize);
+        nodeTextPaint.setStrokeWidth(4f);
         float titlePaddingPx = 5f;
         float lineSpacingPx = 10f;
         float maxLineWidthPx = node.rect.width() - 2 * titlePaddingPx;
@@ -295,7 +299,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
                 / (textHeight + lineSpacingPx));
         //int maxLinesCount = 20;
         float currentLineWidth;
-        String[] words = node.title.split(" ");
+        String[] words = node.title.split("_");
         int wordIndex = 0;
         int lineIndex = 0;
 
@@ -321,9 +325,9 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         }
     }
 
-    private void renderNodeDescriptionWidthAligned(Canvas canvas, Node node) {
-        nodeTextPaint.setTextSize(30.0f);
-        nodeTextPaint.setStrokeWidth(2.0f);
+    private void renderNodeDescriptionWidthAligned(Canvas canvas, Node node, float fontSize) {
+        nodeTextPaint.setTextSize(fontSize);
+        nodeTextPaint.setStrokeWidth(4f);
         float descriptionPaddingPx = 30f;
         float lineSpacingPx = 20f;
         float maxLineWidthPx = node.rect.width() - 2 * descriptionPaddingPx;
@@ -419,7 +423,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
             n.anchors = true;
     }
 
-    private boolean processResizeMode(MotionEvent e){
+    private boolean processResizeMode(MotionEvent e) {
         float touchX = e.getX(), touchY = e.getY();
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.get(i);
@@ -439,8 +443,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
 
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        boolean res = processResizeMode(e);
-        return res;
+        return processResizeMode(e);
     }
 
 // TODO do not cross with another node, causing bug!
@@ -463,18 +466,66 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
                 && Y >= rectF.top && Y <= rectF.bottom;
     }
 
-    boolean handleNodeMove(MotionEvent e, float distanceX, float distanceY) {
-        float touchX = e.getX(), touchY = e.getY();
+    boolean processCursorMovingAnchors(Node node, RectF rect, MotionEvent e2, float distanceX, float distanceY) {
+        if(resizeNodeMode) {
+            float touchX = e2.getX(), touchY = e2.getY();
+            float pxTouchBoxRadius = 200f / scaleFactor;
+            RectF leftTopBox = new RectF(rect.left - pxTouchBoxRadius,
+                    rect.top - pxTouchBoxRadius,
+                    rect.left + pxTouchBoxRadius,
+                    rect.top + pxTouchBoxRadius);
+            RectF leftBottomBox = new RectF(rect.left - pxTouchBoxRadius,
+                    rect.bottom - pxTouchBoxRadius,
+                    rect.left + pxTouchBoxRadius,
+                    rect.bottom + pxTouchBoxRadius);
+            RectF rightTopBox = new RectF(rect.right - pxTouchBoxRadius,
+                    rect.top - pxTouchBoxRadius,
+                    rect.right + pxTouchBoxRadius,
+                    rect.top + pxTouchBoxRadius);
+            RectF rightBottomBox = new RectF(rect.right - pxTouchBoxRadius,
+                    rect.bottom - pxTouchBoxRadius,
+                    rect.right + pxTouchBoxRadius,
+                    rect.bottom + pxTouchBoxRadius);
+
+            if (isCursorInsideNodeRect(touchX, touchY, leftTopBox)) {
+                node.rect.left -= distanceX / scaleFactor;
+                node.rect.top -= distanceY / scaleFactor;
+                return true;
+            }
+            if (isCursorInsideNodeRect(touchX, touchY, leftBottomBox)) {
+                node.rect.left -= distanceX / scaleFactor;
+                node.rect.bottom -= distanceY / scaleFactor;
+                return true;
+            }
+            if (isCursorInsideNodeRect(touchX, touchY, rightTopBox)) {
+                node.rect.right -= distanceX / scaleFactor;
+                node.rect.top -= distanceY / scaleFactor;
+                return true;
+            }
+            if (isCursorInsideNodeRect(touchX, touchY, rightBottomBox)) {
+                node.rect.right -= distanceX / scaleFactor;
+                node.rect.bottom -= distanceY / scaleFactor;
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    boolean handleNodeMove(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
+        float touchX = e2.getX(), touchY = e2.getY();
         for (int i = 0; i < nodes.size(); i++) {
             Node node = nodes.get(i);
             RectF transRect = getTransformedRect(node.rect);
 
             if (isCursorInsideNodeRect(touchX, touchY, transRect)) {
-                node.rect.left -= distanceX / scaleFactor;
-                node.rect.right -= distanceX / scaleFactor;
-                node.rect.top -= distanceY / scaleFactor;
-                node.rect.bottom -= distanceY / scaleFactor;
-
+                boolean processed = processCursorMovingAnchors(node, transRect, e2, distanceX, distanceY);
+                if(!processed) {
+                    node.rect.left -= distanceX / scaleFactor;
+                    node.rect.right -= distanceX / scaleFactor;
+                    node.rect.top -= distanceY / scaleFactor;
+                    node.rect.bottom -= distanceY / scaleFactor;
+                }
                 for (Line line : lines) {
                     line.reCalculateLinks();
                 }
@@ -486,7 +537,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
 
     @Override
     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
-        if (!handleNodeMove(e2, distanceX, distanceY)) {
+        if (!handleNodeMove(e1, e2, distanceX, distanceY)) {
             scrollX -= distanceX / scaleFactor;
             scrollY -= distanceY / scaleFactor;
         }
