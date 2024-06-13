@@ -15,6 +15,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.view.GravityCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
 import com.lqrl.school.dialogs.PublishCourseDialogFragment;
@@ -29,6 +31,7 @@ import com.lqrl.school.interfaces.CoursePublisher;
 import com.lqrl.school.interfaces.LessonOpener;
 import com.lqrl.school.interfaces.NoteBuilderDealer;
 import com.lqrl.school.interfaces.StringSetter;
+import com.lqrl.school.note_builder.NoteBuilderView;
 import com.lqrl.school.web_services.PublishCourseTask;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
@@ -46,14 +49,18 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private NoteBuilderFragment noteBuilderFragment;
     private Toolbar toolbar;
 
-
     @Override
     public void onBackPressed() {
         DrawerLayout drawer = findViewById(R.id.drawer_layout);
         if (drawer.isDrawerOpen(GravityCompat.START)) {
             drawer.closeDrawer(GravityCompat.START);
         } else {
-            super.onBackPressed();
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            if (fragmentManager.getBackStackEntryCount() > 0) {
+                fragmentManager.popBackStack();
+            } else {
+                super.onBackPressed();
+            }
         }
     }
 
@@ -85,7 +92,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         else if(id == R.id.nav_builder){
-            launchNoteBuilderFragment();
+            launchNoteBuilderFragment(NoteBuilderView.Mode.NoteConstructor);
             if(drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
             item.setChecked(true);
@@ -108,9 +115,10 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void launchCreatorCoursesWatchFragment() {
         coursesWatchFragment = new CoursesWatchFragment(this, accessToken);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_view, coursesWatchFragment)
-                .commit();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, coursesWatchFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     @Override
@@ -135,15 +143,33 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         launchCreatorCoursesWatchFragment();
     }
 
-    public void addToolbarNoteBuilderButtons() {
-        toolbar.inflateMenu(R.menu.note_builder_toolbar);
-        toolbar.post(() -> {
-            MenuItem addNodeButton = toolbar.getMenu().findItem(R.id.add_node_dialog);
-            addNodeButton.setOnMenuItemClickListener(v -> {
-                Toast.makeText(this, "Hello toolbar", Toast.LENGTH_SHORT).show();
-                return true;
+    public void addToolbarNoteBuilderButtons(NoteBuilderView.Mode mode) {
+        if(mode == NoteBuilderView.Mode.NoteConstructor){
+            toolbar.inflateMenu(R.menu.note_builder_toolbar);
+            toolbar.post(() -> {
+                MenuItem addNodeButton = toolbar.getMenu().findItem(R.id.add_node_dialog);
+                addNodeButton.setOnMenuItemClickListener(v -> {
+                    Toast.makeText(this, "Hello toolbar", Toast.LENGTH_SHORT).show();
+                    return true;
+                });
             });
-        });
+        } else if(mode == NoteBuilderView.Mode.AnswerConstructor){
+            toolbar.inflateMenu(R.menu.note_answer_toolbar);
+            toolbar.post(() -> {
+                MenuItem addNodeButton = toolbar.getMenu().findItem(R.id.add_node_dialog);
+                addNodeButton.setOnMenuItemClickListener(v -> {
+                    // TODO
+                    Toast.makeText(this, "Add node", Toast.LENGTH_SHORT).show();
+                    return true;
+                });
+                MenuItem shuffleButton = toolbar.getMenu().findItem(R.id.shuffle_nodes);
+                shuffleButton.setOnMenuItemClickListener(v -> {
+                    // TODO
+                    Toast.makeText(this, "Shuffle nodes", Toast.LENGTH_SHORT).show();
+                    return true;
+                });
+            });
+        }
     }
 
     public void clearToolbarMenu(){
@@ -205,24 +231,27 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
     private void launchLessonsFragment(Course course) {
         lessonsWatchFragment = new LessonsWatchFragment(this, accessToken, course);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_view, lessonsWatchFragment)
-                .commit();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, lessonsWatchFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
     private void launchExercisesFragment(Lesson lesson) {
         exercisesWatchFragment = new ExercisesWatchFragment(this, accessToken, lesson);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_view, exercisesWatchFragment)
-                .commit();
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, exercisesWatchFragment);
+        transaction.addToBackStack(null);
+        transaction.commit();
     }
 
-    private void launchNoteBuilderFragment(){
-        noteBuilderFragment = new NoteBuilderFragment(this);
-        getSupportFragmentManager().beginTransaction()
-                .replace(R.id.fragment_container_view, noteBuilderFragment)
-                .commit();
-        //addToolbarNoteBuilderButtons();
+    private void launchNoteBuilderFragment(NoteBuilderView.Mode mode){
+        noteBuilderFragment = new NoteBuilderFragment(this, mode);
+        FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
+                .replace(R.id.fragment_container_view, noteBuilderFragment);
+        //transaction.addToBackStack(null);
+        transaction.commit();
+        addToolbarNoteBuilderButtons(mode);
     }
 
     @Override
@@ -238,7 +267,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void goToBuilder() {
-        launchNoteBuilderFragment();
+    public void goToBuilder(NoteBuilderView.Mode mode) {
+        addToolbarNoteBuilderButtons(mode);
+        launchNoteBuilderFragment(mode);
     }
+
 }

@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exercise title"
+            android:text="Заголовок"
             android:id="@+id/tv_exercise_title"
             style="@style/TextAppearance.Material3.BodyLarge"
             android:layout_margin="10dp"/>
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:id="@+id/et_exercise_title"
-            android:hint="Title..."
+            android:hint="Заголовок..."
             style="@style/TextAppearance.Material3.BodyLarge"/>
     </LinearLayout>
 
@@ -42,7 +42,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exercise description"
+            android:text="Опис"
             android:id="@+id/tv_exercise_desc"
             style="@style/TextAppearance.Material3.BodyLarge"
             android:layout_margin="10dp"/>
@@ -52,7 +52,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:id="@+id/et_exercise_desc"
-            android:hint="Description..."
+            android:hint="Опис..."
             android:inputType="text|textMultiLine"
             style="@style/TextAppearance.Material3.BodyLarge"/>
     </LinearLayout>
@@ -69,18 +69,25 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exercise difficulty 💪🏻"
+            android:text="Складність завдання 💪🏻"
             android:id="@+id/tv_exercise_difficulty"
             style="@style/TextAppearance.Material3.BodyLarge"
             android:layout_margin="10dp"/>
 
-        <EditText
-            android:layout_margin="0dp"
+<!--        <EditText-->
+<!--            android:layout_margin="0dp"-->
+<!--            android:layout_width="wrap_content"-->
+<!--            android:layout_height="48dp"-->
+<!--            android:id="@+id/et_exercise_difficulty"-->
+<!--            android:hint="Складність..."-->
+<!--            style="@style/TextAppearance.Material3.BodyLarge"/>-->
+
+        <androidx.appcompat.widget.AppCompatSpinner
             android:layout_width="wrap_content"
-            android:layout_height="48dp"
-            android:id="@+id/et_exercise_difficulty"
-            android:hint="Difficulty..."
-            style="@style/TextAppearance.Material3.BodyLarge"/>
+            android:layout_height="wrap_content"
+            android:spinnerMode="dropdown"
+            android:id="@+id/sp_exercise_difficulty"/>
+
     </LinearLayout>
 
     <LinearLayout
@@ -95,7 +102,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Exercise time 🕐"
+            android:text="Час на завдання 🕐"
             android:id="@+id/tv_exercise_time"
             style="@style/TextAppearance.Material3.BodyLarge"
             android:layout_margin="10dp"/>
@@ -105,7 +112,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:id="@+id/et_exercise_time"
-            android:hint="Seconds..."
+            android:hint="Секунд..."
             android:inputType="number"
             style="@style/TextAppearance.Material3.BodyLarge"/>
     </LinearLayout>

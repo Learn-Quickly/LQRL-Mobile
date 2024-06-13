@@ -8,16 +8,13 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
-import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lqrl.school.R;
 import com.lqrl.school.entities.Exercise;
-import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.ExercisesWatchFragment;
-import com.lqrl.school.interfaces.LessonDeleter;
-import com.lqrl.school.interfaces.LessonOpener;
 import com.lqrl.school.interfaces.NoteBuilderDealer;
+import com.lqrl.school.note_builder.NoteBuilderView;
 
 import java.util.ArrayList;
 
@@ -46,8 +43,11 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         holder.textViewTitle.setText(currentItem.Title);
         holder.textViewDescription.setText(currentItem.Description);
-        holder.goBuilderButton.setOnClickListener(v -> {
-            ((NoteBuilderDealer)activity).goToBuilder();
+        holder.goNoteBuilder.setOnClickListener(v -> {
+            ((NoteBuilderDealer)activity).goToBuilder(NoteBuilderView.Mode.NoteConstructor);
+        });
+        holder.goAnswerBuilder.setOnClickListener(v -> {
+            ((NoteBuilderDealer)activity).goToBuilder(NoteBuilderView.Mode.AnswerConstructor);
         });
     }
 
@@ -59,13 +59,15 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
     public static class ExerciseViewHolder extends RecyclerView.ViewHolder {
         public TextView textViewTitle;
         public TextView textViewDescription;
-        public Button goBuilderButton;
+        public Button goNoteBuilder;
+        public Button goAnswerBuilder;
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
             textViewTitle = itemView.findViewById(R.id.exercise_title);
             textViewDescription = itemView.findViewById(R.id.exercise_desc);
-            goBuilderButton = itemView.findViewById(R.id.exercise_open_btn);
+            goNoteBuilder = itemView.findViewById(R.id.exercise_task_btn);
+            goAnswerBuilder = itemView.findViewById(R.id.exercise_answer_btn);
         }
     }
 }

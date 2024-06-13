@@ -8,7 +8,7 @@
         android:id="@+id/creator_exercises_list_refresh_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Refresh"
+        android:text="Оновити"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_margin="15dp"/>
@@ -16,7 +16,7 @@
     <androidx.appcompat.widget.AppCompatButton
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Create exercise"
+        android:text="Створити завдання"
         android:id="@+id/creator_create_exercise_btn"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"

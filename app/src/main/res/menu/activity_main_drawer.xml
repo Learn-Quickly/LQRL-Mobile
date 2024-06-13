@@ -4,26 +4,24 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/nav_learn"
-            android:title="Learn" />
+            android:title="Учень" />
 
         <item
             android:id="@+id/nav_create"
-            android:title="Create" />
+            android:title="Вчитель" />
 
         <item
             android:id="@+id/nav_builder"
-            android:title="Enter builder"/>
+            android:title="Конструктор"/>
     </group>
 
-    <item android:title="Tools">
+    <item android:title="Інструменти">
         <menu>
-            <item android:title="Filter by"
+            <item android:title="Фільтр"
                 android:icon="@drawable/filter_foreground"
                 android:id="@+id/filter"/>
-            <item android:title="Create course draft"
+            <item android:title="Чернетка курсу"
                 android:id="@+id/create_course_draft"/>
-<!--            <item android:title="Refresh page"-->
-<!--                android:id="@+id/refresh_page"/>-->
         </menu>
     </item>
 

@@ -6,21 +6,15 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
-import android.graphics.Point;
-import android.graphics.PointF;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
-import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-
-import com.lqrl.school.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -32,8 +26,6 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     private Paint paint;
     private GestureDetector gestureDetector;
     private ScaleGestureDetector scaleGestureDetector;
-    private Canvas bCanvas;
-    private Bitmap bitmap;
     private float scaleFactor = 1.0f;
     private float scrollX = 0;
     private float scrollY = 0;
@@ -42,9 +34,10 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     private Paint nodeTextPaint;
     private Paint linePaint;
     private boolean resizeNodeMode = false;
-
-
-    // TODO resize node mode
+    public static enum Mode {
+        NoteConstructor,
+        AnswerConstructor
+    }
 
     // TODO do we need to ensure correctness? Modulo canvas size logic on scrolling
     // UPD fixed move node after scroll

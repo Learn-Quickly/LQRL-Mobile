@@ -63,7 +63,7 @@ public class CoursesWatchFragment extends Fragment implements StringSetter, Arra
     @Override
     public void setStringState(String src, boolean state) {
         TextView helloUsername = rootView.findViewById(R.id.hello_username);
-        helloUsername.setText("Hello, " + src + "!");
+        helloUsername.setText("Привіт, " + src + "!");
     }
 
     @Override

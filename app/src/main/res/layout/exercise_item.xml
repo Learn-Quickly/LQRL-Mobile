@@ -48,7 +48,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="Time 🕐"
+            android:text="Час 🕐"
             app:layout_constraintTop_toBottomOf="@id/exercise_desc"
             app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -67,7 +67,7 @@
             android:layout_height="wrap_content"
             android:textSize="18sp"
             android:textStyle="bold"
-            android:text="Difficulty 💪🏻"
+            android:text="Складність 💪🏻"
             app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_time_hint"/>
 
@@ -82,13 +82,20 @@
 
 
         <androidx.appcompat.widget.AppCompatButton
-            android:id="@+id/exercise_open_btn"
+            android:id="@+id/exercise_task_btn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_difficulty_set"
+            android:text="Завдання"/>
+
+        <androidx.appcompat.widget.AppCompatButton
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             app:layout_constraintRight_toRightOf="parent"
-            app:layout_constraintLeft_toLeftOf="parent"
             app:layout_constraintTop_toBottomOf="@id/tv_difficulty_set"
-            android:text="Go Builder"/>
+            android:text="Відповідь"
+            android:id="@+id/exercise_answer_btn"/>
 
 
 

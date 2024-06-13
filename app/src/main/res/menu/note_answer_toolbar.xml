@@ -27,6 +27,10 @@
             android:icon="@drawable/ic_action_bin"
             app:showAsAction="always"/>
 
+        <item
+            android:id="@+id/shuffle_nodes"
+            android:title="Shuffle"
+            android:icon="@drawable/ic_action_shuffle"
+            app:showAsAction="always"/>
     </group>
 </menu>
-
