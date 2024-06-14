@@ -1,5 +1,8 @@
 package com.lqrl.school.entities;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Exercise {
     public String Title;
     public String Description;
@@ -7,10 +10,10 @@ public class Exercise {
     public int Id;
     public int CompletionTime;
     public String Difficulty;
-    public String ExerciseBody;
-    public String AnswerBody;
+    public JSONObject ExerciseBody;
+    public JSONObject AnswerBody;
 
-    public Exercise(int id, String title, String description, int lessonId, int completionTime, String difficulty, String exerciseBody, String answerBody){
+    public Exercise(int id, String title, String description, int lessonId, int completionTime, String difficulty, JSONObject exerciseBody, JSONObject answerBody){
         Id = id;
         Title = title;
         Description = description;
@@ -19,5 +22,18 @@ public class Exercise {
         Difficulty = difficulty;
         ExerciseBody = exerciseBody;
         AnswerBody = answerBody;
+    }
+
+    public String toJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("title", Title);
+        json.put("description", Description);
+        json.put("difficult", Difficulty);
+        json.put("time_to_complete", CompletionTime);
+        json.put("lesson_id", LessonId);
+        json.put("exercise_type", "Conspect");
+        json.put("exercise_body", ExerciseBody);
+        json.put("answer_body", AnswerBody);
+        return json.toString();
     }
 }

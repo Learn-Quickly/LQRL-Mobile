@@ -56,27 +56,28 @@ public class RefreshExercisesTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected void onPostExecute(String result){
-        ArrayList<Exercise> exercisesArrayList = new ArrayList<>();
-        try{
-            JSONArray jsonArray = new JSONArray(result);
-            for(int i = 0; i < jsonArray.length(); i++){
-                JSONObject jsonObject = jsonArray.getJSONObject(i);
-                Exercise tmp = new Exercise(
-                        jsonObject.getInt("exercise_id"),
-                        jsonObject.getString("title"),
-                        jsonObject.getString("description"),
-                        jsonObject.getInt("lesson_id"),
-                        jsonObject.getInt("time_to_complete"),
-                        jsonObject.getString("difficult"),
-                        jsonObject.getString("exercise_body"),
-                        jsonObject.getString("answer_body"));
-                exercisesArrayList.add(tmp);
+        if(result != null) {
+            ArrayList<Exercise> exercisesArrayList = new ArrayList<>();
+            try {
+                JSONArray jsonArray = new JSONArray(result);
+                for (int i = 0; i < jsonArray.length(); i++) {
+                    JSONObject jsonObject = jsonArray.getJSONObject(i);
+                    Exercise tmp = new Exercise(
+                            jsonObject.getInt("exercise_id"),
+                            jsonObject.getString("title"),
+                            jsonObject.getString("description"),
+                            jsonObject.getInt("lesson_id"),
+                            jsonObject.getInt("time_to_complete"),
+                            jsonObject.getString("difficult"),
+                            jsonObject.getJSONObject("exercise_body"),
+                            jsonObject.getJSONObject("answer_body"));
+                    exercisesArrayList.add(tmp);
+                }
+                exercisesWatchFragment.setArrayList(exercisesArrayList, true);
+            } catch (JSONException e) {
+                exercisesWatchFragment.setArrayList(exercisesArrayList, false);
+                throw new RuntimeException(e);
             }
-            exercisesWatchFragment.setArrayList(exercisesArrayList, true);
-        } catch(JSONException e){
-            exercisesWatchFragment.setArrayList(exercisesArrayList, false);
-            throw new RuntimeException(e);
         }
-
     }
 }

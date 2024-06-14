@@ -97,6 +97,15 @@
             android:text="Відповідь"
             android:id="@+id/exercise_answer_btn"/>
 
+        <androidx.appcompat.widget.AppCompatButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintLeft_toRightOf="@id/exercise_task_btn"
+            app:layout_constraintRight_toLeftOf="@id/exercise_answer_btn"
+            app:layout_constraintTop_toBottomOf="@id/tv_difficulty_set"
+            android:text="Зберегти"
+            android:id="@+id/exercise_save_btn"/>
+
 
 
     </androidx.constraintlayout.widget.ConstraintLayout>

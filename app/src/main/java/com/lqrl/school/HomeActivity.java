@@ -22,6 +22,7 @@ import com.google.android.material.navigation.NavigationView;
 import com.lqrl.school.dialogs.NodeCreatorDialogFragment;
 import com.lqrl.school.dialogs.PublishCourseDialogFragment;
 import com.lqrl.school.entities.Course;
+import com.lqrl.school.entities.Exercise;
 import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.CoursesWatchFragment;
 import com.lqrl.school.fragments.CreateCourseFragment;
@@ -34,6 +35,8 @@ import com.lqrl.school.interfaces.NoteBuilderDealer;
 import com.lqrl.school.interfaces.StringSetter;
 import com.lqrl.school.note_builder.NoteBuilderView;
 import com.lqrl.school.web_services.PublishCourseTask;
+
+import java.util.ArrayList;
 
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         StringSetter,
@@ -49,6 +52,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ExercisesWatchFragment exercisesWatchFragment;
     private NoteBuilderFragment noteBuilderFragment;
     private Toolbar toolbar;
+    public ArrayList<Exercise> exercisesCache;
 
     @Override
     public void onBackPressed() {
@@ -93,7 +97,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             return true;
         }
         else if(id == R.id.nav_builder){
-            launchNoteBuilderFragment(NoteBuilderView.Mode.NoteConstructor);
+            launchNoteBuilderFragment(null, NoteBuilderView.Mode.NoteConstructor);
             if(drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
             item.setChecked(true);
@@ -140,6 +144,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
         navigationView.setNavigationItemSelectedListener(this);
         registerForContextMenu(navigationView);
+        exercisesCache = new ArrayList<>();
 
         launchCreatorCoursesWatchFragment();
     }
@@ -169,7 +174,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 
                 MenuItem saveButton = toolbar.getMenu().findItem(R.id.save_note);
                 saveButton.setOnMenuItemClickListener(v -> {
-                    noteBuilderFragment.saveJSONDiagramToPrefs(this);
+                    noteBuilderFragment.saveExerciseJSONNote(this);
                     return true;
                 });
             });
@@ -178,8 +183,25 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             toolbar.post(() -> {
                 MenuItem addNodeButton = toolbar.getMenu().findItem(R.id.add_node_dialog);
                 addNodeButton.setOnMenuItemClickListener(v -> {
-                    // TODO
-                    Toast.makeText(this, "Add node", Toast.LENGTH_SHORT).show();
+                    new NodeCreatorDialogFragment(noteBuilderFragment, this).show(getSupportFragmentManager(), "NODE_CREATE");
+                    return true;
+                });
+
+                MenuItem createConnectionButton = toolbar.getMenu().findItem(R.id.set_line_connection);
+                createConnectionButton.setOnMenuItemClickListener(v -> {
+                    noteBuilderFragment.toggleConnectionSetMode();
+                    return true;
+                });
+
+                MenuItem deleteNodeButton = toolbar.getMenu().findItem(R.id.delete_node);
+                deleteNodeButton.setOnMenuItemClickListener(v -> {
+                    noteBuilderFragment.toggleDeleteNodeMode();
+                    return true;
+                });
+
+                MenuItem saveButton = toolbar.getMenu().findItem(R.id.save_note);
+                saveButton.setOnMenuItemClickListener(v -> {
+                    noteBuilderFragment.saveExerciseJSONNote(this);
                     return true;
                 });
                 MenuItem shuffleButton = toolbar.getMenu().findItem(R.id.shuffle_nodes);
@@ -188,9 +210,6 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(this, "Shuffle nodes", Toast.LENGTH_SHORT).show();
                     return true;
                 });
-                MenuItem createConnectionButton = toolbar.getMenu().findItem(R.id.set_line_connection);
-                MenuItem clearCanvasModeButton = toolbar.getMenu().findItem(R.id.delete_node);
-                MenuItem saveButton = toolbar.getMenu().findItem(R.id.add_node_dialog);
             });
         }
     }
@@ -268,11 +287,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         transaction.commit();
     }
 
-    private void launchNoteBuilderFragment(NoteBuilderView.Mode mode){
-        noteBuilderFragment = new NoteBuilderFragment(this, mode);
+    private void launchNoteBuilderFragment(Exercise currentItem, NoteBuilderView.Mode mode){
+        noteBuilderFragment = new NoteBuilderFragment(currentItem,this, mode);
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container_view, noteBuilderFragment);
-        //transaction.addToBackStack(null);
+        transaction.addToBackStack(null);
         transaction.commit();
         addToolbarNoteBuilderButtons(mode);
     }
@@ -290,9 +309,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     @Override
-    public void goToBuilder(NoteBuilderView.Mode mode) {
+    public void goToBuilder(Exercise currentItem, NoteBuilderView.Mode mode) {
         addToolbarNoteBuilderButtons(mode);
-        launchNoteBuilderFragment(mode);
+        launchNoteBuilderFragment(currentItem, mode);
     }
 
 }

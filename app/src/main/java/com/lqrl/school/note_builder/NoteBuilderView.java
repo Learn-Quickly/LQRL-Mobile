@@ -20,6 +20,7 @@ import androidx.annotation.NonNull;
 
 import com.lqrl.school.HomeActivity;
 import com.lqrl.school.R;
+import com.lqrl.school.entities.Exercise;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -45,10 +46,10 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     private boolean connectionMode = false;
     private boolean deleteMode = false;
 
-    public static enum Mode {
+     public static enum Mode {
         NoteConstructor,
         AnswerConstructor
-    }
+     }
 
     // TODO do we need to ensure correctness? Modulo canvas size logic on scrolling
     // UPD fixed move node after scroll
@@ -84,57 +85,59 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         lines = new ArrayList<>();
     }
 
-    public void drawFromJSON(String json) {
+    public void drawFromJSON(JSONObject json) {
         nodes.clear();
         lines.clear();
-        try {
-            JSONObject root = new JSONObject(json);
-            JSONArray nodesJSON = root.getJSONArray("nodes");
-            for (int i = 0; i < nodesJSON.length(); i++) {
-                JSONObject nodeObj = nodesJSON.getJSONObject(i);
-                String id = nodeObj.getString("id");
-                int x = nodeObj.getInt("x");
-                int y = nodeObj.getInt("y");
-                String node_type = nodeObj.getString("node_type");
-                String header = "", definition = "";
-                JSONObject bodyObj = nodeObj.getJSONObject("body");
-                if (node_type.equals("Definition")) {
-                    header = bodyObj.getString("header");
-                    definition = bodyObj.getString("definition");
-                } else if (node_type.equals("Header")) {
-                    header = bodyObj.getString("header");
+        if(json == null) invalidate();
+        else {
+            try {
+                JSONObject root = json;
+                JSONArray nodesJSON = root.getJSONArray("nodes");
+                for (int i = 0; i < nodesJSON.length(); i++) {
+                    JSONObject nodeObj = nodesJSON.getJSONObject(i);
+                    String id = nodeObj.getString("id");
+                    int x = nodeObj.getInt("x");
+                    int y = nodeObj.getInt("y");
+                    String node_type = nodeObj.getString("node_type");
+                    String header = "", definition = "";
+                    JSONObject bodyObj = nodeObj.getJSONObject("body");
+                    if (node_type.equals("Definition")) {
+                        header = bodyObj.getString("header");
+                        definition = bodyObj.getString("definition");
+                    } else if (node_type.equals("Header")) {
+                        header = bodyObj.getString("header");
+                    }
+                    Node node = new Node(id, header, definition, x, y);
+                    nodes.add(node);
                 }
-                Node node = new Node(id, header, definition, x, y);
-                nodes.add(node);
-            }
 
-            JSONArray connectionsJSON = root.getJSONArray("connections");
-            for (int i = 0; i < connectionsJSON.length(); i++) {
-                JSONObject lineObj = connectionsJSON.getJSONObject(i);
-                String idFrom = lineObj.getString("from");
-                String idTo = lineObj.getString("to");
-                Node fromNode = findNodeById(idFrom);
-                Node toNode = findNodeById(idTo);
-                lines.add(new Line(fromNode, toNode));
-            }
+                JSONArray connectionsJSON = root.getJSONArray("connections");
+                for (int i = 0; i < connectionsJSON.length(); i++) {
+                    JSONObject lineObj = connectionsJSON.getJSONObject(i);
+                    String idFrom = lineObj.getString("from");
+                    String idTo = lineObj.getString("to");
+                    Node fromNode = findNodeById(idFrom);
+                    Node toNode = findNodeById(idTo);
+                    lines.add(new Line(fromNode, toNode));
+                }
 
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
+            } catch (JSONException e) {
+                throw new RuntimeException(e);
+            }
+            invalidate();
         }
-        invalidate();
     }
 
-    public void drawFromOptPrefs(Context activity){
+    public void drawFromOptPrefs(Context activity) throws JSONException {
         SharedPreferences preferences = ((HomeActivity)activity).getPreferences(Context.MODE_PRIVATE);
         String JSON = preferences.getString(activity.getString(R.string.note_builder_mode_diagram_json), "");
+        Log.e(TAG, JSON);
         if(!JSON.isEmpty())
-            drawFromJSON(JSON);
-        else drawFromJSON(activity.getString(R.string.test_diagram1));
+            drawFromJSON(new JSONObject(JSON));
+        else drawFromJSON(new JSONObject(activity.getString(R.string.test_diagram1)));
     }
 
-    public void saveJSONDiagramToPrefs(Context activity) {
-        SharedPreferences preferences = ((HomeActivity)activity).getPreferences(Context.MODE_PRIVATE);
-        SharedPreferences.Editor editor = preferences.edit();
+    public void saveJSONDiagramToExercise(Mode mode, Exercise exercise, Context activity) {
         String jsonResult = null;
 
         try {
@@ -155,11 +158,9 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
             root.put("nodes", nodesJSON);
             root.put("connections", connectionsJSON);
 
-            jsonResult = root.toString();
-            Log.e(TAG, "saveJSONDiagramToPrefs: before apply(): " + preferences.getString(activity.getString(R.string.note_builder_mode_diagram_json),""));
-            editor.putString(activity.getString(R.string.note_builder_mode_diagram_json), jsonResult);
-            editor.commit();
-            Log.e(TAG, "saveJSONDiagramToPrefs: after apply(): " + jsonResult);
+            //jsonResult = root.toString();
+            if(mode == Mode.AnswerConstructor) exercise.AnswerBody = root;
+            else exercise.ExerciseBody = root;
             Toast.makeText(activity, "Note was saved!", Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             throw new RuntimeException(e);

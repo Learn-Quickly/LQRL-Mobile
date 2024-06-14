@@ -43,11 +43,17 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         holder.textViewTitle.setText(currentItem.Title);
         holder.textViewDescription.setText(currentItem.Description);
+        holder.difficulty.setText(currentItem.Difficulty);
+        holder.timeSeconds.setText(String.valueOf(currentItem.CompletionTime));
+
         holder.goNoteBuilder.setOnClickListener(v -> {
-            ((NoteBuilderDealer)activity).goToBuilder(NoteBuilderView.Mode.NoteConstructor);
+            ((NoteBuilderDealer)activity).goToBuilder(currentItem, NoteBuilderView.Mode.NoteConstructor);
         });
         holder.goAnswerBuilder.setOnClickListener(v -> {
-            ((NoteBuilderDealer)activity).goToBuilder(NoteBuilderView.Mode.AnswerConstructor);
+            ((NoteBuilderDealer)activity).goToBuilder(currentItem, NoteBuilderView.Mode.AnswerConstructor);
+        });
+        holder.saveExercise.setOnClickListener(v ->{
+            exerciseWatchFragment.saveExercise(currentItem);
         });
     }
 
@@ -61,6 +67,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
         public TextView textViewDescription;
         public Button goNoteBuilder;
         public Button goAnswerBuilder;
+        public Button saveExercise;
+        public TextView timeSeconds;
+        public TextView difficulty;
 
         public ExerciseViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -68,6 +77,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             textViewDescription = itemView.findViewById(R.id.exercise_desc);
             goNoteBuilder = itemView.findViewById(R.id.exercise_task_btn);
             goAnswerBuilder = itemView.findViewById(R.id.exercise_answer_btn);
+            timeSeconds = itemView.findViewById(R.id.tv_time_set);
+            difficulty = itemView.findViewById(R.id.tv_difficulty_set);
+            saveExercise = itemView.findViewById(R.id.exercise_save_btn);
         }
     }
 }

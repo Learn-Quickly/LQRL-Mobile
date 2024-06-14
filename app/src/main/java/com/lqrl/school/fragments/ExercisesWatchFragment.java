@@ -2,6 +2,7 @@ package com.lqrl.school.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -13,6 +14,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lqrl.school.HomeActivity;
 import com.lqrl.school.R;
 import com.lqrl.school.adapters.ExerciseAdapter;
 import com.lqrl.school.entities.Exercise;
@@ -20,6 +22,7 @@ import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.interfaces.ArraySetter;
 import com.lqrl.school.interfaces.ExerciseCreator;
 import com.lqrl.school.dialogs.ExerciseCreateDialogFragment;
+import com.lqrl.school.web_services.CreateExerciseTask;
 import com.lqrl.school.web_services.RefreshExercisesTask;
 
 import java.util.ArrayList;
@@ -31,6 +34,8 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
     Lesson lesson;
     ArrayList<Exercise> exercises;
     ExerciseAdapter exercisesAdapter;
+    public static String TAG = "ExercisesWatchFragment";
+
     public ExercisesWatchFragment(Context context, String accessToken, Lesson lesson){
         this.activity = context;
         this.accessToken = accessToken;
@@ -43,11 +48,14 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
         Button createExercises = view.findViewById(R.id.creator_create_exercise_btn);
         RecyclerView recyclerView = view.findViewById(R.id.exercisesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
+
         exercises = new ArrayList<>();
+        exercises.addAll(((HomeActivity)activity).exercisesCache);
+
         exercisesAdapter = new ExerciseAdapter(activity, exercises, this);
         recyclerView.setAdapter(exercisesAdapter);
         refreshExercises.setOnClickListener(v -> {
-            refreshList();
+            refreshList(null);
         });
         createExercises.setOnClickListener(v -> {
             new ExerciseCreateDialogFragment(this, activity).show(getChildFragmentManager(), "CREATE_EXERCISE");
@@ -55,7 +63,8 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
         return view;
     }
 
-    private void refreshList() {
+    public void refreshList(Exercise createdOnServer) {
+        if(createdOnServer != null) ((HomeActivity)activity).exercisesCache.remove(createdOnServer);
         new RefreshExercisesTask(lesson, activity, accessToken, this).execute();
     }
 
@@ -64,6 +73,7 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
         if(ok){
             exercises.clear();
             exercises.addAll(src);
+            exercises.addAll(((HomeActivity)activity).exercisesCache);
             exercisesAdapter.notifyDataSetChanged();
             Toast.makeText(activity, "Refreshed successfully", Toast.LENGTH_SHORT).show();
         } else {
@@ -74,13 +84,19 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
     @Override
     public void sendExerciseEntity(Exercise exercise) {
         exercise.LessonId = lesson.Id;
-        //new CreateLessonTask(activity, this, lesson, accessToken).execute();
-        // TODO сделать CreateExerciseTask
-        Toast.makeText(activity, "debug: Exercise created", Toast.LENGTH_SHORT).show();
+        exercises.add(exercise);
+        ((HomeActivity)activity).exercisesCache.add(exercise);
+        exercisesAdapter.notifyDataSetChanged();
     }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
 
+    }
+
+    public void saveExercise(Exercise currentItem) {
+        Log.e(TAG, "saveExercise: exercise body:" + currentItem.ExerciseBody);
+        Log.e(TAG, "saveExercise: exercise answer:" + currentItem.ExerciseBody);
+        new CreateExerciseTask(activity, this, currentItem, accessToken).execute();
     }
 }
