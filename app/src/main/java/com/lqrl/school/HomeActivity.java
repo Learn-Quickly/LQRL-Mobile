@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
+import com.lqrl.school.dialogs.NodeCreatorDialogFragment;
 import com.lqrl.school.dialogs.PublishCourseDialogFragment;
 import com.lqrl.school.entities.Course;
 import com.lqrl.school.entities.Lesson;
@@ -144,12 +145,31 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     }
 
     public void addToolbarNoteBuilderButtons(NoteBuilderView.Mode mode) {
+        clearToolbarMenu();
         if(mode == NoteBuilderView.Mode.NoteConstructor){
             toolbar.inflateMenu(R.menu.note_builder_toolbar);
             toolbar.post(() -> {
                 MenuItem addNodeButton = toolbar.getMenu().findItem(R.id.add_node_dialog);
                 addNodeButton.setOnMenuItemClickListener(v -> {
-                    Toast.makeText(this, "Hello toolbar", Toast.LENGTH_SHORT).show();
+                    new NodeCreatorDialogFragment(noteBuilderFragment, this).show(getSupportFragmentManager(), "NODE_CREATE");
+                    return true;
+                });
+
+                MenuItem createConnectionButton = toolbar.getMenu().findItem(R.id.set_line_connection);
+                createConnectionButton.setOnMenuItemClickListener(v -> {
+                    noteBuilderFragment.toggleConnectionSetMode();
+                    return true;
+                });
+
+                MenuItem deleteNodeButton = toolbar.getMenu().findItem(R.id.delete_node);
+                deleteNodeButton.setOnMenuItemClickListener(v -> {
+                    noteBuilderFragment.toggleDeleteNodeMode();
+                    return true;
+                });
+
+                MenuItem saveButton = toolbar.getMenu().findItem(R.id.save_note);
+                saveButton.setOnMenuItemClickListener(v -> {
+                    noteBuilderFragment.saveJSONDiagramToPrefs(this);
                     return true;
                 });
             });
@@ -168,6 +188,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                     Toast.makeText(this, "Shuffle nodes", Toast.LENGTH_SHORT).show();
                     return true;
                 });
+                MenuItem createConnectionButton = toolbar.getMenu().findItem(R.id.set_line_connection);
+                MenuItem clearCanvasModeButton = toolbar.getMenu().findItem(R.id.delete_node);
+                MenuItem saveButton = toolbar.getMenu().findItem(R.id.add_node_dialog);
             });
         }
     }

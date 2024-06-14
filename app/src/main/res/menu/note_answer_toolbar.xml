@@ -22,8 +22,8 @@
             app:showAsAction="always"/>
 
         <item
-            android:id="@+id/clear_canvas"
-            android:title="Clear editor"
+            android:id="@+id/delete_node"
+            android:title="Delete node"
             android:icon="@drawable/ic_action_bin"
             app:showAsAction="always"/>
 

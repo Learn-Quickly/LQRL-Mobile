@@ -40,4 +40,5 @@
       }
    ]
 }</string>
+    <string name="note_builder_mode_diagram_json">NOTE_BUILDER_MODE</string>
 </resources>

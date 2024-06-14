@@ -1,7 +1,7 @@
 package com.lqrl.school.note_builder;
 
 import android.content.Context;
-import android.graphics.Bitmap;
+import android.content.SharedPreferences;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -9,20 +9,28 @@ import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+
+import com.lqrl.school.HomeActivity;
+import com.lqrl.school.R;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.Random;
+import java.util.UUID;
 
 public class NoteBuilderView extends View implements GestureDetector.OnGestureListener {
+    public static String TAG = "NoteBuilderView";
     private Paint paint;
     private GestureDetector gestureDetector;
     private ScaleGestureDetector scaleGestureDetector;
@@ -34,6 +42,9 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     private Paint nodeTextPaint;
     private Paint linePaint;
     private boolean resizeNodeMode = false;
+    private boolean connectionMode = false;
+    private boolean deleteMode = false;
+
     public static enum Mode {
         NoteConstructor,
         AnswerConstructor
@@ -100,14 +111,11 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
             JSONArray connectionsJSON = root.getJSONArray("connections");
             for (int i = 0; i < connectionsJSON.length(); i++) {
                 JSONObject lineObj = connectionsJSON.getJSONObject(i);
-                String from = lineObj.getString("from");
-                String to = lineObj.getString("to");
-                Node n1 = findNodeById(from);
-                Node n2 = findNodeById(to);
-                if (n1 != null && n2 != null) {
-                    Line line = new Line(n1, n2);
-                    lines.add(line);
-                }
+                String idFrom = lineObj.getString("from");
+                String idTo = lineObj.getString("to");
+                Node fromNode = findNodeById(idFrom);
+                Node toNode = findNodeById(idTo);
+                lines.add(new Line(fromNode, toNode));
             }
 
         } catch (JSONException e) {
@@ -115,6 +123,75 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         }
         invalidate();
     }
+
+    public void drawFromOptPrefs(Context activity){
+        SharedPreferences preferences = ((HomeActivity)activity).getPreferences(Context.MODE_PRIVATE);
+        String JSON = preferences.getString(activity.getString(R.string.note_builder_mode_diagram_json), "");
+        if(!JSON.isEmpty())
+            drawFromJSON(JSON);
+        else drawFromJSON(activity.getString(R.string.test_diagram1));
+    }
+
+    public void saveJSONDiagramToPrefs(Context activity) {
+        SharedPreferences preferences = ((HomeActivity)activity).getPreferences(Context.MODE_PRIVATE);
+        SharedPreferences.Editor editor = preferences.edit();
+        String jsonResult = null;
+
+        try {
+            JSONObject root = new JSONObject();
+            JSONArray nodesJSON = new JSONArray();
+            JSONArray connectionsJSON = new JSONArray();
+
+            for (int i = 0; i < nodes.size(); i++) {
+                JSONObject jsonNode = convertNodeToJSON(nodes.get(i));
+                nodesJSON.put(i, jsonNode);
+            }
+
+            for (int i = 0; i < lines.size(); i++) {
+                JSONObject jsonConnection = convertLineToJSON(lines.get(i));
+                connectionsJSON.put(i, jsonConnection);
+            }
+
+            root.put("nodes", nodesJSON);
+            root.put("connections", connectionsJSON);
+
+            jsonResult = root.toString();
+            Log.e(TAG, "saveJSONDiagramToPrefs: before apply(): " + preferences.getString(activity.getString(R.string.note_builder_mode_diagram_json),""));
+            editor.putString(activity.getString(R.string.note_builder_mode_diagram_json), jsonResult);
+            editor.commit();
+            Log.e(TAG, "saveJSONDiagramToPrefs: after apply(): " + jsonResult);
+            Toast.makeText(activity, "Note was saved!", Toast.LENGTH_SHORT).show();
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+    private JSONObject convertLineToJSON(Line line) throws JSONException {
+        JSONObject lineObj = new JSONObject();
+        lineObj.put("from", line.n1.id);
+        lineObj.put("to", line.n2.id);
+        return lineObj;
+    }
+
+    @NonNull
+    private JSONObject convertNodeToJSON(Node node) throws JSONException {
+        JSONObject nodeObj = new JSONObject();
+        nodeObj.put("id", node.id);
+        nodeObj.put("x", (int) node.rect.left);
+        nodeObj.put("y", (int) node.rect.top);
+        JSONObject nodeBody = new JSONObject();
+        if(node.description.isEmpty()){
+            nodeObj.put("node_type", "Header");
+            nodeBody.put("header", node.title);
+        } else{
+            nodeObj.put("node_type", "Definition");
+            nodeBody.put("header", node.title);
+            nodeBody.put("definition", node.description);
+        }
+        nodeObj.put("body", nodeBody);
+        return nodeObj;
+    }
+
 
     private Node findNodeById(String id) {
         for (int i = 0; i < nodes.size(); i++) {
@@ -147,6 +224,37 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         }
 
         canvas.restore();
+    }
+
+    public void createNodeFromPayload(Node node){
+        UUID uuid = UUID.randomUUID();
+        node.id = uuid.toString();
+        int maxH = getHeight() - 100, maxW = getWidth() - 100;
+        boolean stuck = true; int x = 0, y = 0;
+        Random r = new Random();
+        while(stuck){
+            x = r.nextInt(maxW);
+            y = r.nextInt(maxH);
+            stuck = false;
+            for(Node n : nodes){
+                stuck |= isCursorInsideNodeRect(x, y, n.rect);
+            }
+        }
+        node.xBegin = x; node.yBegin = y;
+        node.rect = new RectF(x, y, x + 500, y + 300);
+        nodes.add(node);
+    }
+
+    public void toggleConnectionMode() {
+        deleteMode = false;
+        connectionMode = !connectionMode;
+        Toast.makeText(getContext(), "Connection mode " + (connectionMode ? "ON" : "OFF"), Toast.LENGTH_SHORT).show();
+    }
+
+    public void toggleDeleteNodeMode() {
+        connectionMode = false;
+        deleteMode = !deleteMode;
+        Toast.makeText(getContext(), "Delete mode " + (connectionMode ? "ON" : "OFF"), Toast.LENGTH_SHORT).show();
     }
 
     private void renderGrid(Canvas canvas) {
@@ -292,7 +400,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
                 / (textHeight + lineSpacingPx));
         //int maxLinesCount = 20;
         float currentLineWidth;
-        String[] words = node.title.split("_");
+        String[] words = node.title.split(" ");
         int wordIndex = 0;
         int lineIndex = 0;
 
@@ -331,7 +439,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         int maxLinesCount = (int) ((node.rect.height() - 2 * descriptionPaddingPx - lineSpacingPx)
                 / (textHeight + lineSpacingPx));
         float currentLineWidth;
-        String[] words = node.description.split("_"); // TODO Org JSON unable to process whitespace-separated strings
+        String[] words = node.description.split(" ");
         int wordIndex = 0;
         int lineIndex = 0;
 
@@ -434,9 +542,62 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         return true;
     }
 
+    private Node choosedFirstToConnect = null;
+    private boolean processConnectionMode(MotionEvent e){
+        if(choosedFirstToConnect == null){
+            float touchX = e.getX(), touchY = e.getY();
+            for (int i = 0; i < nodes.size(); i++) {
+                Node node = nodes.get(i);
+                RectF transRect = getTransformedRect(node.rect);
+                if (isCursorInsideNodeRect(touchX, touchY, transRect)) {
+                    choosedFirstToConnect = node;
+                    invalidate();
+                    return true;
+                }
+            }
+        } else {
+            float touchX = e.getX(), touchY = e.getY();
+            for (int i = 0; i < nodes.size(); i++) {
+                Node node = nodes.get(i);
+                RectF transRect = getTransformedRect(node.rect);
+                if (isCursorInsideNodeRect(touchX, touchY, transRect)) {
+                    lines.add(new Line(choosedFirstToConnect, node));
+                    toggleConnectionMode();
+                    choosedFirstToConnect = null;
+                    invalidate();
+                    return true;
+                }
+            }
+        }
+        return true;
+    }
+
     @Override
     public boolean onSingleTapUp(MotionEvent e) {
-        return processResizeMode(e);
+        if(deleteMode) return processDeleteMode(e);
+        else if(connectionMode) return processConnectionMode(e);
+        else return processResizeMode(e);
+    }
+
+    private boolean processDeleteMode(MotionEvent e) {
+        float touchX = e.getX(), touchY = e.getY();
+        for (int i = 0; i < nodes.size(); i++) {
+            Node node = nodes.get(i);
+            RectF transRect = getTransformedRect(node.rect);
+            if (isCursorInsideNodeRect(touchX, touchY, transRect)) {
+
+                for(int j = 0; j < lines.size(); j++){
+                    if(lines.get(j).n1 == node || lines.get(j).n2 == node){
+                        lines.remove(j--);
+                    }
+                }
+
+                nodes.remove(i); // nodes.remove(node);
+                invalidate();
+                return true;
+            }
+        }
+        return true;
     }
 
 // TODO do not cross with another node, causing bug!
@@ -462,7 +623,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     boolean processCursorMovingAnchors(Node node, RectF rect, MotionEvent e2, float distanceX, float distanceY) {
         if(resizeNodeMode) {
             float touchX = e2.getX(), touchY = e2.getY();
-            float pxTouchBoxRadius = 200f / scaleFactor;
+            float pxTouchBoxRadius = 100f / scaleFactor;
             RectF leftTopBox = new RectF(rect.left - pxTouchBoxRadius,
                     rect.top - pxTouchBoxRadius,
                     rect.left + pxTouchBoxRadius,
