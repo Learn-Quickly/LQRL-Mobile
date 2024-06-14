@@ -61,7 +61,7 @@ public class ChangePasswordTask extends AsyncTask<Void, Void, String> {
             Toast.makeText(context, "Password changed successfully!", Toast.LENGTH_SHORT).show();
 
         } else {
-            Toast.makeText(context, "Server Error! Possibly wrong old password.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, "Server Error: wrong old password.", Toast.LENGTH_SHORT).show();
         }
     }
 }
