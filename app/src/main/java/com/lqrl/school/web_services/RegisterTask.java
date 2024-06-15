@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.R;
 
 import okhttp3.MediaType;
@@ -32,7 +33,7 @@ public class RegisterTask extends AsyncTask<String, Void, String> {
                 "}";
 
         RequestBody body = RequestBody.create(jsonRequest, JSON);
-        Request.Builder requestBuilder = new Request.Builder().url("http://109.86.250.207:8080/api/register").post(body);
+        Request.Builder requestBuilder = new Request.Builder().url(BuildConfig.SERVER_ROOT + "/api/register").post(body);
         Request request = requestBuilder.build();
 
         try (Response response = client.newCall(request).execute()) {

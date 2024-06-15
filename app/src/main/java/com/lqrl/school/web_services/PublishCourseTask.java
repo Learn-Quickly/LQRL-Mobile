@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.R;
 import com.lqrl.school.entities.Course;
 import com.lqrl.school.interfaces.CoursePublisher;
@@ -45,7 +46,7 @@ public class PublishCourseTask extends AsyncTask<Void,Void,String> {
             throw new RuntimeException(e);
         }
         Request publishCourse = new Request.Builder()
-                .url("http://109.86.250.207:8080/api/course/publish_course")
+                .url(BuildConfig.SERVER_ROOT + "/api/course/publish_course")
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .put(body)
                 .build();

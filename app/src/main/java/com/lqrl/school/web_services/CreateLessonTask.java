@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.R;
 import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.LessonsWatchFragment;
@@ -53,7 +54,7 @@ public class CreateLessonTask extends AsyncTask<Void, Void, String> {
         }
 
         Request createCourse = new Request.Builder()
-                .url("http://109.86.250.207:8080/api/course/lesson/create")
+                .url(BuildConfig.SERVER_ROOT + "/api/course/lesson/create")
                 .post(body)
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .build();

@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.R;
 
 import org.json.JSONException;
@@ -41,7 +42,7 @@ public class ChangePasswordTask extends AsyncTask<Void, Void, String> {
         }
 
         RequestBody body = RequestBody.create(requestBody, JSON);
-        Request.Builder requestBuilder = new Request.Builder().url("http://109.86.250.207:8080/api/user/change_pwd").put(body);
+        Request.Builder requestBuilder = new Request.Builder().url(BuildConfig.SERVER_ROOT + "/api/user/change_pwd").put(body);
         requestBuilder.addHeader("Authorization", "Bearer " + accessToken);
         Request request = requestBuilder.build();
 

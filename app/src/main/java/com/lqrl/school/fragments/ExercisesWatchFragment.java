@@ -75,7 +75,7 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
             exercises.addAll(src);
             exercises.addAll(((HomeActivity)activity).exercisesCache);
             exercisesAdapter.notifyDataSetChanged();
-            Toast.makeText(activity, R.string.refreshed_successfully, Toast.LENGTH_SHORT).show();
+            //Toast.makeText(activity, R.string.refreshed_successfully, Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(activity, R.string.network_or_server_error, Toast.LENGTH_SHORT).show();
         }
