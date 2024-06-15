@@ -3,6 +3,7 @@ package com.lqrl.school.web_services;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.entities.Exercise;
 import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.ExercisesWatchFragment;
@@ -36,7 +37,7 @@ public class RefreshExercisesTask extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... voids){
 
         Request getLessonsByCourse = new Request.Builder()
-                .url("http://109.86.250.207:8080/api/course/lesson/exercise/get_lesson_exercises/" + lesson.Id)
+                .url(BuildConfig.SERVER_ROOT + "/api/course/lesson/exercise/get_lesson_exercises/" + lesson.Id)
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .get()
                 .build();

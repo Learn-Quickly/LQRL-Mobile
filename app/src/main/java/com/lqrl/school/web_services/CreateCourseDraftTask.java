@@ -3,6 +3,7 @@ package com.lqrl.school.web_services;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.interfaces.StringSetter;
 
 import org.json.JSONException;
@@ -52,7 +53,7 @@ public class CreateCourseDraftTask extends AsyncTask<Void, Void, String> {
         }
 
         Request createCourse = new Request.Builder()
-                .url("http://109.86.250.207:8080/api/course/create_course_draft")
+                .url(BuildConfig.SERVER_ROOT + "/api/course/create_course_draft")
                 .post(body)
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .build();

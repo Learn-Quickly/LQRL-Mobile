@@ -3,6 +3,7 @@ package com.lqrl.school.web_services;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.interfaces.StringSetter;
 
 import java.io.IOException;
@@ -35,7 +36,7 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
         RequestBody body = RequestBody.create(requestBody, JSON);
         String basicAuthCredentials = username + ":" + password;
         String base64EncodedCredentials = Base64.getEncoder().encodeToString(basicAuthCredentials.getBytes());
-        Request.Builder requestBuilder = new Request.Builder().url("http://109.86.250.207:8080/api/login").post(body);
+        Request.Builder requestBuilder = new Request.Builder().url(BuildConfig.SERVER_ROOT + "/api/login").post(body);
         requestBuilder.addHeader("Authorization", "Basic " + base64EncodedCredentials);
         Request request = requestBuilder.build();
 

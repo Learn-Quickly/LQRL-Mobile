@@ -2,6 +2,7 @@ package com.lqrl.school.web_services;
 
 import android.os.AsyncTask;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.entities.Course;
 import com.lqrl.school.interfaces.ArraySetter;
 
@@ -28,7 +29,7 @@ public class GetCreatedCoursesTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... voids) {
         Request getCreatedCourses = new Request.Builder()
-                .url("http://109.86.250.207:8080/api/course/get_created_courses")
+                .url(BuildConfig.SERVER_ROOT + "/api/course/get_created_courses")
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .get()
                 .build();

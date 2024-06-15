@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.R;
 import com.lqrl.school.fragments.LessonsWatchFragment;
 
@@ -49,7 +50,7 @@ public class DeleteLessonTask extends AsyncTask<Void, Void, String> {
         }
 
         Request createCourse = new Request.Builder()
-                .url("http://109.86.250.207:8080/api/course/lesson/delete")
+                .url(BuildConfig.SERVER_ROOT + "/api/course/lesson/delete")
                 .delete(body)
                 .addHeader("Authorization", "Bearer " + accessToken)
                 .build();

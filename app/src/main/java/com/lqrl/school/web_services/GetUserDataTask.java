@@ -4,6 +4,7 @@ import android.os.AsyncTask;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import com.lqrl.school.BuildConfig;
 import com.lqrl.school.R;
 import com.lqrl.school.interfaces.StringSetter;
 
@@ -28,7 +29,7 @@ public class GetUserDataTask extends AsyncTask<Void, Void, String> {
     @Override
     protected String doInBackground(Void... voids) {
         Request.Builder getUserData = new Request.Builder()
-                .url("http://109.86.250.207:8080/api/user/get_user_data")
+                .url(BuildConfig.SERVER_ROOT + "/api/user/get_user_data")
                 .get();
         getUserData.addHeader("Authorization", "Bearer " + accessToken);
         Request getUserDataRequest = getUserData.build();
