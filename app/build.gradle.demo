@@ -5,7 +5,11 @@ plugins {
 android {
     namespace 'com.lqrl.school'
     compileSdk 34
+    buildFeatures{
+        buildConfig true
+    }
 
+    flavorDimensions "default"
     productFlavors {
         dev {
             buildConfigField "String", "SERVER_IP4", "\"ip\""

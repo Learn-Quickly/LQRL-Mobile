@@ -73,7 +73,7 @@ public class LessonsWatchFragment extends Fragment implements ArraySetter<Lesson
             lessons.clear();
             lessons.addAll(src);
             lessonAdapter.notifyDataSetChanged();
-            Toast.makeText(activity, getString(R.string.refreshed_successfully), Toast.LENGTH_SHORT).show();
+            //Toast.makeText(activity, getString(R.string.refreshed_successfully), Toast.LENGTH_SHORT).show();
         } else {
             Toast.makeText(activity, getString(R.string.network_or_server_error), Toast.LENGTH_SHORT).show();
         }
