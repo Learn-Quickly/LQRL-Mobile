@@ -2,6 +2,9 @@ package com.lqrl.school.web_services;
 
 import android.os.AsyncTask;
 
+import androidx.appcompat.app.AppCompatActivity;
+
+import com.lqrl.school.R;
 import com.lqrl.school.interfaces.StringSetter;
 
 import org.json.JSONException;
@@ -50,7 +53,7 @@ public class GetUserDataTask extends AsyncTask<Void, Void, String> {
                 String username = rootobj.getString("username");
                 activity.setStringState(username, true);
             } catch (JSONException e) {
-                activity.setStringState("SERVER ERROR", false);
+                activity.setStringState(((AppCompatActivity)activity).getString(R.string.server_error), false);
                 throw new RuntimeException(e);
             }
 

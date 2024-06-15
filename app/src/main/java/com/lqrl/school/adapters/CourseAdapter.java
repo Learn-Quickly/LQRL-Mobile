@@ -31,7 +31,7 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
     @NonNull
     @Override
     public CardViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_card, parent, false);
+        View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.course_item, parent, false);
         return new CardViewHolder(view);
     }
 
@@ -46,7 +46,6 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
         holder.learnButton.setOnClickListener(v -> {
             ((CoursePublisher) activity).requestPublishCourse(currentItem);
         });
-        //holder.courseCardView.setCardBackgroundColor(currentItem.getCourseColor());
         holder.constraintLayout.setBackgroundColor(currentItem.getCourseColor());
     }
 

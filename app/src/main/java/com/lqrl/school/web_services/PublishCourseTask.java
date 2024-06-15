@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.R;
 import com.lqrl.school.entities.Course;
 import com.lqrl.school.interfaces.CoursePublisher;
 
@@ -65,10 +66,10 @@ public class PublishCourseTask extends AsyncTask<Void,Void,String> {
     @Override
     protected void onPostExecute(String result){
         if(result != null){
-            Toast.makeText(activity, "Course published!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.course_published, Toast.LENGTH_SHORT).show();
             ((CoursePublisher)activity).sendPublishStatus(true);
         } else {
-            Toast.makeText(activity, "Error!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.error, Toast.LENGTH_SHORT).show();
             ((CoursePublisher)activity).sendPublishStatus(false);
         }
     }

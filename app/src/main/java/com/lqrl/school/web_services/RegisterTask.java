@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.R;
+
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.RequestBody;
@@ -49,10 +51,10 @@ public class RegisterTask extends AsyncTask<String, Void, String> {
     @Override
     protected void onPostExecute(String result){
         if(result.toUpperCase().contains("true".toUpperCase())){
-            Toast.makeText(context, "Registration successful!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.registration_successful, Toast.LENGTH_SHORT).show();
 
         } else {
-            Toast.makeText(context, "Error! Username is occupied.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.error_username_is_occupied, Toast.LENGTH_SHORT).show();
         }
         //str1.toUpperCase().contains(str2.toUpperCase())
     }

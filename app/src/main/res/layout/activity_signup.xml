@@ -21,7 +21,7 @@
             android:id="@+id/tv_login_title_signup"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             style="@style/TextAppearance.AppCompat.Headline" />
     </LinearLayout>
 
@@ -48,7 +48,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Username"
+                android:hint="@string/username"
                 android:inputType="text" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -68,7 +68,7 @@
             <com.google.android.material.textfield.TextInputEditText
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:hint="Password"
+                android:hint="@string/password"
                 android:inputType="textPassword" />
 
         </com.google.android.material.textfield.TextInputLayout>
@@ -77,7 +77,7 @@
             android:id="@+id/btnSignUp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Sign Up"
+            android:text="@string/sign_up"
             app:layout_constraintTop_toBottomOf="@id/editTextPassword"
             android:layout_marginTop="10dp" />
 
@@ -95,7 +95,7 @@
                 android:id="@+id/tv_alreadyhaveanaccount"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Already have an account?"
+                android:text="@string/already_have_an_account"
                 android:layout_marginRight="20dp"
                 style="@style/TextAppearance.Material3.BodyLarge"/>
 
@@ -103,7 +103,7 @@
                 android:id="@+id/tv_signin_ref"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="Login"
+                android:text="@string/login"
                 style="@style/TextAppearance.Material3.BodyLarge"/>
         </LinearLayout>
 

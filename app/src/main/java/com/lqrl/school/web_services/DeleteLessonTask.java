@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.R;
 import com.lqrl.school.fragments.LessonsWatchFragment;
 
 import org.json.JSONException;
@@ -69,9 +70,9 @@ public class DeleteLessonTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result){
         if(result != null){
-            Toast.makeText(activity, "Lesson deleted", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.lesson_deleted, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(activity, "Failed to delete lesson", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.failed_to_delete_lesson, Toast.LENGTH_SHORT).show();
         }
     }
 }

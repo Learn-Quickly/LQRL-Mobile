@@ -40,25 +40,25 @@ public class ExerciseCreateDialogFragment extends DialogFragment implements Adap
         EditText editTextDescription = view.findViewById(R.id.et_exercise_desc);
         EditText editTextCompletionTime = view.findViewById(R.id.et_exercise_time);
         Spinner spinnerDifficulty = view.findViewById(R.id.sp_exercise_difficulty);
-        String[] items = new String[] {"Easy", "Medium", "Hard"};
+        String[] items = new String[] {getString(R.string.difficulty_easy), getString(R.string.difficulty_medium), getString(R.string.difficulty_hard)};
         String choosedItem = null;
         ArrayAdapter<String> spItemsAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, items);
         spinnerDifficulty.setAdapter(spItemsAdapter);
         spinnerDifficulty.setOnItemSelectedListener(this);
 
-        builder.setTitle("Створити завдання")
+        builder.setTitle(getString(R.string.create_task))
                 .setView(view)
                 .setPositiveButton("Ok", (dialog, which) -> {
                     String title = editTextTitle.getText().toString();
                     String description = editTextDescription.getText().toString();
                     int completionTime = Integer.parseInt(editTextCompletionTime.getText().toString());
                     if(title.isEmpty()){
-                        Toast.makeText(activity, "Field title is empty.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, getString(R.string.field_title_is_empty), Toast.LENGTH_SHORT).show();
                         dismiss();
                     }
                     ((ExerciseCreator) fragment).sendExerciseEntity(new Exercise(-1, title, description, -1, completionTime, itemChosen, null, null));
                 })
-                .setNegativeButton("Відмінити", (dialog, which) -> {
+                .setNegativeButton(R.string.cancel_dialog, (dialog, which) -> {
 
                 });
         return builder.create();

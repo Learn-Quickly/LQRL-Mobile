@@ -75,9 +75,9 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
             exercises.addAll(src);
             exercises.addAll(((HomeActivity)activity).exercisesCache);
             exercisesAdapter.notifyDataSetChanged();
-            Toast.makeText(activity, "Refreshed successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.refreshed_successfully, Toast.LENGTH_SHORT).show();
         } else {
-            Toast.makeText(activity, "Network or server error", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.network_or_server_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -91,7 +91,7 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
-
+        refreshList(null);
     }
 
     public void saveExercise(Exercise currentItem) {

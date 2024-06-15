@@ -18,7 +18,7 @@ import com.lqrl.school.note_builder.NoteBuilderView;
 
 public class NoteBuilderFragment extends Fragment implements NodeCreator {
     Context activity;
-    NoteBuilderView.Mode mode; // TODO actual need right here?
+    NoteBuilderView.Mode mode;
     NoteBuilderView noteBuilderView;
     Exercise exercise;
 
@@ -31,7 +31,6 @@ public class NoteBuilderFragment extends Fragment implements NodeCreator {
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
         View root = inflater.inflate(R.layout.note_builder_fragment, parent, false);
         noteBuilderView = root.findViewById(R.id.diagramView);
-//        noteBuilderView.drawFromOptPrefs(activity);
         if(mode == NoteBuilderView.Mode.NoteConstructor)
             if(exercise.ExerciseBody == null)
                 noteBuilderView.drawFromJSON(null);
@@ -64,5 +63,9 @@ public class NoteBuilderFragment extends Fragment implements NodeCreator {
 
     public void saveExerciseJSONNote(Context activity) {
         noteBuilderView.saveJSONDiagramToExercise(mode, exercise, activity);
+    }
+
+    public void shuffleNodesRemoveArrows() {
+        // TODO
     }
 }

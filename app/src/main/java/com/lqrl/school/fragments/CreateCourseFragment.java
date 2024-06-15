@@ -45,7 +45,7 @@ public class CreateCourseFragment extends Fragment {
         pickColor.setOnClickListener(v -> {
             ColorPickerDialogBuilder
                     .with(activity)
-                    .setTitle("Choose color")
+                    .setTitle(getString(R.string.choose_color))
                     .initialColor((int) Color.pack(252,3,3))
                     .wheelType(ColorPickerView.WHEEL_TYPE.FLOWER)
                     .density(12)
@@ -63,7 +63,7 @@ public class CreateCourseFragment extends Fragment {
                             pickedColor = selectedColor;
                         }
                     })
-                    .setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                    .setNegativeButton(getString(R.string.cancel_dialog), new DialogInterface.OnClickListener() {
                         @Override
                         public void onClick(DialogInterface dialog, int which) {
                             colorDemo.setBackgroundColor(defaultColor);
@@ -84,7 +84,7 @@ public class CreateCourseFragment extends Fragment {
                 CreateCourseDraftTask createCourseDraftTask = new CreateCourseDraftTask(activity, accessToken, title, desc, fPrice, pickedColor);
                 createCourseDraftTask.execute();
             } else {
-                toast("Empty text fields!");
+                toast(getString(R.string.empty_text_fields));
             }
         });
 

@@ -4,15 +4,18 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.R;
+
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.io.IOException;
-import java.util.Base64;
 
 import okhttp3.MediaType;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.RequestBody;
 import okhttp3.Response;
-import org.json.*;
 
 public class ChangePasswordTask extends AsyncTask<Void, Void, String> {
     String accessToken, oldP, newP;
@@ -58,10 +61,10 @@ public class ChangePasswordTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result){
         if(result.toUpperCase().contains("true".toUpperCase())){
-            Toast.makeText(context, "Password changed successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.password_changed_successfully, Toast.LENGTH_SHORT).show();
 
         } else {
-            Toast.makeText(context, "Server Error: wrong old password.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(context, R.string.server_error_wrong_old_password, Toast.LENGTH_SHORT).show();
         }
     }
 }

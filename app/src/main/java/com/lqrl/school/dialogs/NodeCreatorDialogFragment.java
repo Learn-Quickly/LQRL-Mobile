@@ -13,10 +13,7 @@ import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
 import com.lqrl.school.R;
-import com.lqrl.school.entities.Lesson;
-import com.lqrl.school.fragments.LessonsWatchFragment;
 import com.lqrl.school.fragments.NoteBuilderFragment;
-import com.lqrl.school.interfaces.LessonCreator;
 import com.lqrl.school.interfaces.NodeCreator;
 import com.lqrl.school.note_builder.Node;
 
@@ -37,18 +34,18 @@ public class NodeCreatorDialogFragment extends DialogFragment {
         EditText editTextTitle = view.findViewById(R.id.et_node_title);
         EditText editTextDescription = view.findViewById(R.id.et_node_desc);
 
-        builder.setTitle("Create node")
+        builder.setTitle(R.string.create_node)
                 .setView(view)
                 .setPositiveButton("Ok", (dialog, which) -> {
                     String title = editTextTitle.getText().toString();
                     String description = editTextDescription.getText().toString();
                     if(title.isEmpty()){
-                        Toast.makeText(activity, "Field title is empty.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, getString(R.string.field_title_is_empty), Toast.LENGTH_SHORT).show();
                         dismiss();
                     }
                     ((NodeCreator) fragment).addNode(new Node("_id", title, description, 0, 0));
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> {
+                .setNegativeButton(getString(R.string.cancel_dialog), (dialog, which) -> {
 
                 });
         return builder.create();

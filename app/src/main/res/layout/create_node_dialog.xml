@@ -15,7 +15,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Node title"
+            android:text="@string/node_title"
             android:id="@+id/tv_lesson_title"
             style="@style/TextAppearance.Material3.BodyLarge"
             android:layout_margin="10dp"/>
@@ -25,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="48dp"
             android:id="@+id/et_node_title"
-            android:hint="Title..."
+            android:hint="@string/title"
             style="@style/TextAppearance.Material3.BodyLarge"
             app:layout_constraintLeft_toRightOf="@id/tv_lesson_title"
             app:layout_constraintTop_toTopOf="parent"/>
@@ -44,7 +44,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Node description"
+            android:text="@string/node_description"
             android:id="@+id/tv_lesson_desc"
             style="@style/TextAppearance.Material3.BodyLarge"
             android:layout_margin="10dp"/>
@@ -54,7 +54,7 @@
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:id="@+id/et_node_desc"
-            android:hint="Description..."
+            android:hint="@string/description"
             android:inputType="text|textMultiLine"
             style="@style/TextAppearance.Material3.BodyLarge"
             app:layout_constraintLeft_toRightOf="@id/tv_lesson_title"

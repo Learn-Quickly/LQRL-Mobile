@@ -2,13 +2,11 @@ package com.lqrl.school;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.util.Log;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -44,10 +42,10 @@ public class LoginActivity extends AppCompatActivity implements StringSetter, Ac
         TextView hyperlinkPwdRestore = findViewById(R.id.tv_change_pwd_ref);
         TextView hyperlinkSingUp= findViewById(R.id.tv_signup_ref);
 
-        String textPwdRestore = "Change Password";
+        String textPwdRestore = getString(R.string.change_password);
         SpannableString spannableStringPwdRestore = new SpannableString(textPwdRestore);
 
-        String textSignUp = "Sign Up";
+        String textSignUp = getString(R.string.sign_up);
         SpannableString spannableStringSignUp = new SpannableString(textSignUp);
 
         CustomClickableSpan customClickableSpanPwdRestore = new CustomClickableSpan(this, CustomClickableSpan.Action.ChangePassword);
@@ -72,7 +70,7 @@ public class LoginActivity extends AppCompatActivity implements StringSetter, Ac
                 startActivity(intent);
 
             } else {
-                Toast.makeText(this, "Please, Log in", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.please_log_in, Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -91,11 +89,11 @@ public class LoginActivity extends AppCompatActivity implements StringSetter, Ac
         if(state) {
             accessToken = src;
             singInState = true;
-            Toast.makeText(this, "Signed in successfully!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.signed_in_successfully, Toast.LENGTH_SHORT).show();
 
         } else {
             singInState = false;
-            Toast.makeText(this, "Empty token due to an error!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.empty_token_due_to_an_error, Toast.LENGTH_SHORT).show();
         }
     }
 
@@ -108,7 +106,7 @@ public class LoginActivity extends AppCompatActivity implements StringSetter, Ac
     @Override
     public void redirectChangePwdActivity(Bundle bundle) {
         if(!singInState){
-            Toast.makeText(this, "Please, Log in first.", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.please_log_in_first, Toast.LENGTH_SHORT).show();
             return;
         }
         else {

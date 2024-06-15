@@ -134,7 +134,6 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         Log.e(TAG, JSON);
         if(!JSON.isEmpty())
             drawFromJSON(new JSONObject(JSON));
-        else drawFromJSON(new JSONObject(activity.getString(R.string.test_diagram1)));
     }
 
     public void saveJSONDiagramToExercise(Mode mode, Exercise exercise, Context activity) {
@@ -161,7 +160,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
             //jsonResult = root.toString();
             if(mode == Mode.AnswerConstructor) exercise.AnswerBody = root;
             else exercise.ExerciseBody = root;
-            Toast.makeText(activity, "Note was saved!", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.note_was_saved, Toast.LENGTH_SHORT).show();
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
@@ -249,13 +248,13 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     public void toggleConnectionMode() {
         deleteMode = false;
         connectionMode = !connectionMode;
-        Toast.makeText(getContext(), "Connection mode " + (connectionMode ? "ON" : "OFF"), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getContext().getString(R.string.connection_mode) + (connectionMode ? getContext().getString(R.string.on) : getContext().getString(R.string.off)), Toast.LENGTH_SHORT).show();
     }
 
     public void toggleDeleteNodeMode() {
         connectionMode = false;
         deleteMode = !deleteMode;
-        Toast.makeText(getContext(), "Delete mode " + (connectionMode ? "ON" : "OFF"), Toast.LENGTH_SHORT).show();
+        Toast.makeText(getContext(), getContext().getString(R.string.delete_mode) + (deleteMode ? getContext().getString(R.string.on) : getContext().getString(R.string.off)), Toast.LENGTH_SHORT).show();
     }
 
     private void renderGrid(Canvas canvas) {
@@ -543,15 +542,15 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
         return true;
     }
 
-    private Node choosedFirstToConnect = null;
+    private Node chosenFirstToConnect = null;
     private boolean processConnectionMode(MotionEvent e){
-        if(choosedFirstToConnect == null){
+        if(chosenFirstToConnect == null){
             float touchX = e.getX(), touchY = e.getY();
             for (int i = 0; i < nodes.size(); i++) {
                 Node node = nodes.get(i);
                 RectF transRect = getTransformedRect(node.rect);
                 if (isCursorInsideNodeRect(touchX, touchY, transRect)) {
-                    choosedFirstToConnect = node;
+                    chosenFirstToConnect = node;
                     invalidate();
                     return true;
                 }
@@ -562,9 +561,9 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
                 Node node = nodes.get(i);
                 RectF transRect = getTransformedRect(node.rect);
                 if (isCursorInsideNodeRect(touchX, touchY, transRect)) {
-                    lines.add(new Line(choosedFirstToConnect, node));
+                    lines.add(new Line(chosenFirstToConnect, node));
                     toggleConnectionMode();
-                    choosedFirstToConnect = null;
+                    chosenFirstToConnect = null;
                     invalidate();
                     return true;
                 }

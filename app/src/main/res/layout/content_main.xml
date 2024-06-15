@@ -18,7 +18,7 @@
 
     <TextView
         android:id="@+id/cabinet_title"
-        android:text="Режим творця"
+        android:text="@string/creator_mode"
         android:layout_width="wrap_content"
         android:layout_height="48dp"
         style="@style/TextAppearance.AppCompat.Headline"
@@ -32,7 +32,7 @@
         android:id="@+id/creator_course_list_refresh_button"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Оновити курси"
+        android:text="@string/refresh_courses"
         app:layout_constraintTop_toTopOf="@id/cabinet_title"
         app:layout_constraintRight_toRightOf="parent"/>
 

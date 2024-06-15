@@ -1,44 +1,98 @@
 <resources>
-    <string name="app_name">LQRL</string>
+    <string name="app_name" translatable="false">LQRL</string>
     <string name="drawer_open">Drawer open</string>
     <string name="drawer_close">Drawer close</string>
-    <string name="lorem">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
-    <string name="irraz_ner_title">Рішення ірраціональних нерівностей</string>
-    <string name="irraz_ner_def">Нерівність, що містить змінну під знаком кореня N-го ступеня</string>
-    <string name="isp_ravn_preobr_title">Використання рівносильних перетворень</string>
-    <string name="isp_ravn_preobr_def">на ОДЗ вихідної нерівності</string>
-    <string name="isp_meth_intervalov_title">Використання методу інтервалів</string>
-    <string name="isp_meth_intervalov_def">для нерівностей виду f(x) &lt;&gt; 0</string>
-    <string name="test_diagram1">
-{
-   "connections":[
-      {
-         "from":"Node_1",
-         "to":"Node_2"
-      }
-        ],
-   "nodes":[
-      {
-         "id":"Node_1",
-         "x":140,
-         "y":140,
-         "node_type":"Definition",
-         "body":{
-            "header":"Філософія",
-            "definition":"Наука_про_життя_людей_з_давніх_давен_його_існування"
-         }
-      },
-      {
-         "id":"Node_2",
-         "x":300,
-         "y":800,
-         "node_type":"Definition",
-         "body":{
-            "header": "Ейдоси_Платона",
-            "definition":"трактується_як_фіксація_або_організація_речі_що_перебуває_в_чуттєвому_континуумі"
-         }
-      }
-   ]
-}</string>
-    <string name="note_builder_mode_diagram_json">NOTE_BUILDER_MODE</string>
+    <string name="lorem" translatable="false">Lorem ipsum dolor sit amet consectetur adipiscing elit sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</string>
+    <string name="note_builder_mode_diagram_json" translatable="false">NOTE_BUILDER_MODE</string>
+    <string name="difficulty_easy">Easy</string>
+    <string name="difficulty_medium">Medium</string>
+    <string name="create_task">Create exercise</string>
+    <string name="field_title_is_empty">Field title is empty.</string>
+    <string name="cancel_dialog">Cancel</string>
+    <string name="difficulty_hard">Hard</string>
+    <string name="create_lesson">Create lesson</string>
+    <string name="create_node">Create node</string>
+    <string name="do_you_want_to_publish_this_course">Do you want to publish this course?</string>
+    <string name="yes">Yes</string>
+    <string name="Hello_comma">"Hello, "</string>
+    <string name="choose_color">Choose color</string>
+    <string name="empty_text_fields">Empty text fields!</string>
+    <string name="refreshed_successfully">Refreshed successfully</string>
+    <string name="network_or_server_error">Network or server error</string>
+    <string name="note_was_saved">Note was saved!</string>
+    <string name="connection_mode">"Connection mode "</string>
+    <string name="delete_mode">"Delete mode "</string>
+    <string name="on">ON</string>
+    <string name="off">OFF</string>
+    <string name="password_changed_successfully">Password changed successfully!</string>
+    <string name="server_error_wrong_old_password">Server Error: wrong old password.</string>
+    <string name="exercise_created_successfully">Exercise created successfully</string>
+    <string name="failed_to_create_exercise">Failed to create exercise</string>
+    <string name="lesson_created_successfully">Lesson created successfully</string>
+    <string name="failed_to_create_lesson">Failed to create lesson</string>
+    <string name="server_error" translatable="false">SERVER ERROR</string>
+    <string name="course_published">Course published!</string>
+    <string name="error">Error!</string>
+    <string name="registration_successful">Registration successful!</string>
+    <string name="error_username_is_occupied">Error! Username is occupied.</string>
+    <string name="login">Login</string>
+    <string name="please_log_in">Please, Log in</string>
+    <string name="empty_text_field_s">Empty text field(s).</string>
+    <string name="error_passwords_match">Error: passwords match</string>
+    <string name="course_created_successfully">Course created successfully!</string>
+    <string name="course_already_exists">Course already exists!</string>
+    <string name="change_password">Change Password</string>
+    <string name="sign_up">Sign Up</string>
+    <string name="signed_in_successfully">Signed in successfully!</string>
+    <string name="empty_token_due_to_an_error">Empty token due to an error!</string>
+    <string name="please_log_in_first">Please, Log in first.</string>
+    <string name="password">Password</string>
+    <string name="everything_ok">Everything OK?</string>
+    <string name="welcome_back">Welcome back!</string>
+    <string name="username">Username</string>
+    <string name="sign_in">Sign In</string>
+    <string name="don_t_have_an_account">Don\'t have an account?</string>
+    <string name="already_have_an_account">Already have an account?</string>
+    <string name="creator_mode">Creator mode</string>
+    <string name="refresh_courses">Refresh courses</string>
+    <string name="go_to_course">Learn</string>
+    <string name="create_course">Create course</string>
+    <string name="title">Title</string>
+    <string name="course_title">Course title</string>
+    <string name="description">Description</string>
+    <string name="course_description">Course description</string>
+    <string name="price">Price</string>
+    <string name="course_price_write_0_to_make_free">Course price (write 0 to make free)</string>
+    <string name="color">Color</string>
+    <string name="pick_a_color">Pick a color!</string>
+    <string name="exercise_difficulty">Exercise difficulty 💪🏻</string>
+    <string name="exercise_time_to_complete">Completion time 🕐</string>
+    <string name="seconds">Seconds</string>
+    <string name="lesson_title">Lesson title</string>
+    <string name="lesson_description">Lesson description</string>
+    <string name="node_title">Node title</string>
+    <string name="node_description">Node description</string>
+    <string name="create_exercise">Create exercise</string>
+    <string name="refresh">Refresh</string>
+    <string name="refresh_lesons_list">Refresh lesons list</string>
+    <string name="exercise">Exercise</string>
+    <string name="answer">Answer</string>
+    <string name="save">Save</string>
+    <string name="delete">delete</string>
+    <string name="open">Open</string>
+    <string name="student">Student</string>
+    <string name="creator">Creator</string>
+    <string name="tools">Tools</string>
+    <string name="filter_drawerlayout">Filter by...</string>
+    <string name="course_draft">Course draft...</string>
+    <string name="all">All</string>
+    <string name="complete">Complete</string>
+    <string name="in_progress">In progress</string>
+    <string name="add_node">Add node</string>
+    <string name="add_line">Add line</string>
+    <string name="delete_node">Delete node</string>
+    <string name="shuffle">Shuffle</string>
+    <string name="new_password">New password</string>
+    <string name="lesson_deleted">Lesson deleted</string>
+    <string name="failed_to_delete_lesson">Failed to delete lesson</string>
 </resources>

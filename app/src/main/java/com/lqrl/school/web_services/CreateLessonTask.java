@@ -4,6 +4,7 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import com.lqrl.school.R;
 import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.LessonsWatchFragment;
 
@@ -73,17 +74,17 @@ public class CreateLessonTask extends AsyncTask<Void, Void, String> {
     @Override
     protected void onPostExecute(String result){
         if(result != null){
-            Toast.makeText(activity, "Lesson created successfully", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.lesson_created_successfully, Toast.LENGTH_SHORT).show();
             try {
                 JSONObject resp = new JSONObject(result);
-                lesson.Id = resp.getInt("exercise_id");
+                lesson.Id = resp.getInt("lesson_id");
             } catch (JSONException e) {
                 throw new RuntimeException(e);
             }
 
             fragment.refreshList();
         } else {
-            Toast.makeText(activity, "Failed to create lesson", Toast.LENGTH_SHORT).show();
+            Toast.makeText(activity, R.string.failed_to_create_lesson, Toast.LENGTH_SHORT).show();
         }
     }
 }

@@ -34,18 +34,18 @@ public class LessonCreateDialogFragment extends DialogFragment {
         EditText editTextTitle = view.findViewById(R.id.et_lesson_title);
         EditText editTextDescription = view.findViewById(R.id.et_lesson_desc);
 
-        builder.setTitle("Create lesson")
+        builder.setTitle(getString(R.string.create_lesson))
                 .setView(view)
                 .setPositiveButton("Ok", (dialog, which) -> {
                     String title = editTextTitle.getText().toString();
                     String description = editTextDescription.getText().toString();
                     if(title.isEmpty()){
-                        Toast.makeText(activity, "Field title is empty.", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(activity, getString(R.string.field_title_is_empty), Toast.LENGTH_SHORT).show();
                         dismiss();
                     }
                     ((LessonCreator) fragment).sendLessonEntity(new Lesson(-1, title, description, -1));
                 })
-                .setNegativeButton("Cancel", (dialog, which) -> {
+                .setNegativeButton(getString(R.string.cancel_dialog), (dialog, which) -> {
                     //((LessonCreator) fragment).sendLessonEntity(null);
                 });
         return builder.create();

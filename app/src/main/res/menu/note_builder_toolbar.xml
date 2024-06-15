@@ -5,25 +5,25 @@
     <group android:checkableBehavior="single">
         <item
             android:id="@+id/save_note"
-            android:title="Save"
+            android:title="@string/save"
             android:icon="@drawable/ic_action_save"
             app:showAsAction="always"/>
 
         <item
             android:id="@+id/add_node_dialog"
-            android:title="Add node"
+            android:title="@string/add_node"
             android:icon="@drawable/baseline_add_24"
             app:showAsAction="always"/>
 
         <item
             android:id="@+id/set_line_connection"
-            android:title="Add line"
+            android:title="@string/add_line"
             android:icon="@drawable/outline_account_tree_24"
             app:showAsAction="always"/>
 
         <item
             android:id="@+id/delete_node"
-            android:title="Delete node"
+            android:title="@string/delete_node"
             android:icon="@drawable/ic_action_bin"
             app:showAsAction="always"/>
 

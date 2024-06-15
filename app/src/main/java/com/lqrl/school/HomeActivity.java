@@ -96,13 +96,13 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
             item.setChecked(true);
             return true;
         }
-        else if(id == R.id.nav_builder){
-            launchNoteBuilderFragment(null, NoteBuilderView.Mode.NoteConstructor);
-            if(drawerLayout.isDrawerOpen(GravityCompat.START))
-                drawerLayout.closeDrawer(GravityCompat.START);
-            item.setChecked(true);
-            return true;
-        }
+//        else if(id == R.id.nav_builder){
+//            launchNoteBuilderFragment(null, NoteBuilderView.Mode.NoteConstructor);
+//            if(drawerLayout.isDrawerOpen(GravityCompat.START))
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//            item.setChecked(true);
+//            return true;
+//        }
         else if(id == R.id.filter) {
             openContextMenu(navigationView);
             return true;
@@ -206,8 +206,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
                 });
                 MenuItem shuffleButton = toolbar.getMenu().findItem(R.id.shuffle_nodes);
                 shuffleButton.setOnMenuItemClickListener(v -> {
-                    // TODO
-                    Toast.makeText(this, "Shuffle nodes", Toast.LENGTH_SHORT).show();
+                    noteBuilderFragment.shuffleNodesRemoveArrows();
                     return true;
                 });
             });
@@ -242,9 +241,9 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     @Override
     public void setStringState(String src, boolean state) {
         if(state){
-            toast("Course created successfully!");
+            toast(getString(R.string.course_created_successfully));
         } else {
-            toast("Course already exists!");
+            toast(getString(R.string.course_already_exists));
         }
     }
 

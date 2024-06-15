@@ -8,6 +8,7 @@ import android.os.Bundle;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.lqrl.school.R;
 import com.lqrl.school.entities.Course;
 import com.lqrl.school.interfaces.CoursePublisher;
 
@@ -24,9 +25,9 @@ public class PublishCourseDialogFragment extends DialogFragment {
     @Override
     public Dialog onCreateDialog(Bundle savedInstanceState){
         AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-        builder.setMessage("Do you want to publish this course?")
-                .setPositiveButton("Yes", (dialog, which) -> ((CoursePublisher) activity).approveDialogPublish(true, course))
-                .setNegativeButton("Cancel", (dialog, which) -> ((CoursePublisher) activity).approveDialogPublish(false, course));
+        builder.setMessage(getString(R.string.do_you_want_to_publish_this_course))
+                .setPositiveButton(R.string.yes, (dialog, which) -> ((CoursePublisher) activity).approveDialogPublish(true, course))
+                .setNegativeButton(R.string.cancel_dialog, (dialog, which) -> ((CoursePublisher) activity).approveDialogPublish(false, course));
         return builder.create();
     }
 }

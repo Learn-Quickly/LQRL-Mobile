@@ -2,12 +2,10 @@ package com.lqrl.school;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
@@ -34,7 +32,7 @@ public class SignUpActivity extends AppCompatActivity implements ActivityRedirec
 
         TextView hyperlinkLogin = findViewById(R.id.tv_signin_ref);
 
-        String textLogin = "Login";
+        String textLogin = getString(R.string.login);
         SpannableString spannableStringLogin = new SpannableString(textLogin);
 
         CustomClickableSpan customClickableSpanLogin = new CustomClickableSpan(this, CustomClickableSpan.Action.Login);

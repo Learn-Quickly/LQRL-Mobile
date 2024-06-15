@@ -2,12 +2,10 @@ package com.lqrl.school;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.os.PersistableBundle;
 import android.text.SpannableString;
 import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.widget.Button;
-import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -40,7 +38,7 @@ public class ChangePasswordActivity extends AppCompatActivity implements Activit
 
         TextView hyperlinkLogin = findViewById(R.id.tv_signin_ref);
 
-        String textLogin = "Login";
+        String textLogin = getString(R.string.login);
         SpannableString spannableStringLogin = new SpannableString(textLogin);
 
         CustomClickableSpan customClickableSpanLogin = new CustomClickableSpan(this, CustomClickableSpan.Action.Login);
@@ -53,18 +51,18 @@ public class ChangePasswordActivity extends AppCompatActivity implements Activit
 
     private void changePassword(){
         if(!singInState){
-            Toast.makeText(this, "Please, Log in", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.please_log_in, Toast.LENGTH_SHORT).show();
             return;
         }
         if(editTextNewPassword.getEditText().getText().toString().isEmpty() || editTextPassword.getEditText().getText().toString().isEmpty()){
-            Toast.makeText(this, "Empty text field(s).", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.empty_text_field_s, Toast.LENGTH_SHORT).show();
             return;
         }
 
         String oldP = editTextPassword.getEditText().getText().toString();
         String newP = editTextNewPassword.getEditText().getText().toString();
         if(oldP.equals(newP)){
-            Toast.makeText(this, "Error: passwords match", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.error_passwords_match, Toast.LENGTH_SHORT).show();
         } else {
             ChangePasswordTask changePasswordTask = new ChangePasswordTask(this, accessToken, oldP, newP);
             changePasswordTask.execute();
