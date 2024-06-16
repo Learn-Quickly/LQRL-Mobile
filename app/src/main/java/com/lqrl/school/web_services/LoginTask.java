@@ -3,6 +3,8 @@ package com.lqrl.school.web_services;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
+
 import com.lqrl.school.BuildConfig;
 import com.lqrl.school.interfaces.StringSetter;
 
@@ -20,7 +22,6 @@ import org.json.*;
 public class LoginTask extends AsyncTask<Void, Void, String> {
     public String accessToken = "";
     public String username, password;
-    OkHttpClient client = new OkHttpClient();
     StringSetter context;
     public LoginTask(Context activity, String username, String password){
         this.username = username;
@@ -30,6 +31,12 @@ public class LoginTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... voids) {
+        return loginUser(username, password);
+    }
+
+    @NonNull
+    public static String loginUser(String username, String password) {
+        OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         String requestBody = "";
 

@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.lqrl.school.BuildConfig;
 import com.lqrl.school.R;
 import com.lqrl.school.entities.Lesson;
@@ -37,21 +39,17 @@ public class CreateLessonTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... voids) {
-        JSONObject course = new JSONObject();
+        return createLesson(lesson, accessToken);
+    }
+
+    @Nullable
+    private String createLesson(Lesson lesson, String accessToken) {
         String postBody = "";
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         RequestBody body;
 
-        try {
-            course.put("course_id", lesson.CourseId);
-            course.put("description", lesson.Description);
-            course.put("title", lesson.Title);
-            postBody = course.toString();
-            body = RequestBody.create(postBody, JSON);
-
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        postBody = lesson.toJSON();
+        body = RequestBody.create(postBody, JSON);
 
         Request createCourse = new Request.Builder()
                 .url(BuildConfig.SERVER_ROOT + "/api/course/lesson/create")

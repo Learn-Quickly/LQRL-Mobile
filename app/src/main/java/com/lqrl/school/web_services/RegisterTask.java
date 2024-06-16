@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
+
 import com.lqrl.school.BuildConfig;
 import com.lqrl.school.R;
 
@@ -15,7 +17,6 @@ import okhttp3.Response;
 import java.io.IOException;
 
 public class RegisterTask extends AsyncTask<String, Void, String> {
-    OkHttpClient client = new OkHttpClient();
     Context context;
     String username, password;
     public RegisterTask(Context activity, String username, String pwd){
@@ -26,6 +27,12 @@ public class RegisterTask extends AsyncTask<String, Void, String> {
 
     @Override
     protected String doInBackground(String... strings) {
+        return registerUser(username, password);
+    }
+
+    @NonNull
+    public static String registerUser(String username, String password) {
+        OkHttpClient client = new OkHttpClient();
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         String jsonRequest = "{\n" +
                 "  \"pwd\": \"" + password + "\",\n" +

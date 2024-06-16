@@ -3,7 +3,10 @@ package com.lqrl.school.web_services;
 import android.content.Context;
 import android.os.AsyncTask;
 
+import androidx.annotation.NonNull;
+
 import com.lqrl.school.BuildConfig;
+import com.lqrl.school.entities.Course;
 import com.lqrl.school.interfaces.StringSetter;
 
 import org.json.JSONException;
@@ -18,39 +21,30 @@ import okhttp3.RequestBody;
 import okhttp3.Response;
 
 public class CreateCourseDraftTask extends AsyncTask<Void, Void, String> {
-    OkHttpClient client = new OkHttpClient();
-    String accessToken, title, desc;
-    float price;
+    String accessToken;
     Context activity;
-    int color;
-    public CreateCourseDraftTask(Context stringSetter, String token, String title, String desc, float price, int color){
+    Course course;
+    public CreateCourseDraftTask(Context stringSetter, String token, Course course){
         activity = stringSetter;
         accessToken = token;
-        this.title = title;
-        this.desc = desc;
-        this.price = price;
-        this.color = color;
+        this.course = course;
     }
 
     @Override
     protected String doInBackground(Void... voids) {
-        JSONObject course = new JSONObject();
+        return createCourseDraft(course, accessToken);
+    }
+
+    @NonNull
+    public static String createCourseDraft(Course course, String accessToken) {
+        OkHttpClient client = new OkHttpClient();
+        JSONObject courseJSON = new JSONObject();
         String postBody = "";
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         RequestBody body;
 
-        try {
-            course.put("title", title);
-            course.put("description", desc);
-            course.put("price", price);
-            course.put("color", String.valueOf(color));
-            course.put("course_type", "general");
-            postBody = course.toString();
-            body = RequestBody.create(postBody, JSON);
-
-        } catch (JSONException e) {
-            throw new RuntimeException(e);
-        }
+        postBody = course.toJSON();
+        body = RequestBody.create(postBody, JSON);
 
         Request createCourse = new Request.Builder()
                 .url(BuildConfig.SERVER_ROOT + "/api/course/create_course_draft")

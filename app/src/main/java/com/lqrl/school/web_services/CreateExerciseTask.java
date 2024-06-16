@@ -4,6 +4,8 @@ import android.content.Context;
 import android.os.AsyncTask;
 import android.widget.Toast;
 
+import androidx.annotation.Nullable;
+
 import com.lqrl.school.BuildConfig;
 import com.lqrl.school.R;
 import com.lqrl.school.entities.Exercise;
@@ -39,6 +41,11 @@ public class CreateExerciseTask extends AsyncTask<Void, Void, String> {
 
     @Override
     protected String doInBackground(Void... voids) {
+        return createExercise(exercise, accessToken);
+    }
+
+    @Nullable
+    private String createExercise(Exercise exercise, String accessToken) {
         String postBody = "";
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         RequestBody body;

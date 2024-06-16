@@ -18,6 +18,7 @@ import com.flask.colorpicker.ColorPickerView;
 import com.flask.colorpicker.OnColorSelectedListener;
 import com.lqrl.school.R;
 import com.flask.colorpicker.builder.*;
+import com.lqrl.school.entities.Course;
 import com.lqrl.school.web_services.CreateCourseDraftTask;
 
 public class CreateCourseFragment extends Fragment {
@@ -81,7 +82,8 @@ public class CreateCourseFragment extends Fragment {
             boolean ok = checkFields();
             if(ok){
                 float fPrice = Float.parseFloat(price);
-                CreateCourseDraftTask createCourseDraftTask = new CreateCourseDraftTask(activity, accessToken, title, desc, fPrice, pickedColor);
+                Course course = new Course(-1, title, 0, fPrice, pickedColor, desc, "");
+                CreateCourseDraftTask createCourseDraftTask = new CreateCourseDraftTask(activity, accessToken, course);
                 createCourseDraftTask.execute();
             } else {
                 toast(getString(R.string.empty_text_fields));

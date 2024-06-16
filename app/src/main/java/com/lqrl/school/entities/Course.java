@@ -1,5 +1,8 @@
 package com.lqrl.school.entities;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 public class Course {
     private final String courseName;
     private final int courseParticipantsCount;
@@ -34,4 +37,20 @@ public class Course {
     public int getCourseId() { return this.courseId; }
 
     public String getState() { return this.state; }
+
+    public String toJSON(){
+        JSONObject course = new JSONObject();
+
+        try {
+            course.put("title", courseName);
+            course.put("description", courseDescription);
+            course.put("price", coursePrice);
+            course.put("color", String.valueOf(color));
+            course.put("course_type", "general");
+            return course.toString();
+
+        } catch (JSONException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }
