@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lqrl.school.HomeActivity;
 import com.lqrl.school.R;
 import com.lqrl.school.entities.Lesson;
 import com.lqrl.school.fragments.LessonsWatchFragment;
@@ -45,6 +46,7 @@ public class LessonAdapter extends RecyclerView.Adapter<LessonAdapter.LessonView
         holder.textViewTitle.setText(currentItem.Title);
         holder.textViewDescription.setText(currentItem.Description);
         holder.openButton.setOnClickListener(v -> {
+           // ((HomeActivity)activity).exerciseService.setCurrentLesson(currentItem);
             ((LessonOpener)activity).requestOpenLesson(currentItem);
         });
         holder.deleteButton.setOnClickListener(v -> {

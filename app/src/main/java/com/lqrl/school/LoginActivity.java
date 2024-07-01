@@ -73,12 +73,12 @@ public class LoginActivity extends AppCompatActivity implements StringSetter, Ac
                 Toast.makeText(this, R.string.please_log_in, Toast.LENGTH_SHORT).show();
             }
         });
-
+        //new DemoFiller(this).execute();
     }
 
     private void signIn() {
-        String username = editTextEmail.getEditText().getText().toString();
-        String password = editTextPassword.getEditText().getText().toString();
+        String username = editTextEmail.getEditText().getText().toString().trim();
+        String password = editTextPassword.getEditText().getText().toString().trim();
 
         LoginTask loginTask = new LoginTask(this, username, password);
         loginTask.execute();
@@ -89,10 +89,12 @@ public class LoginActivity extends AppCompatActivity implements StringSetter, Ac
         if(state) {
             accessToken = src;
             singInState = true;
+            TokenManager.saveToken(this, accessToken);
             Toast.makeText(this, R.string.signed_in_successfully, Toast.LENGTH_SHORT).show();
 
         } else {
             singInState = false;
+            TokenManager.saveToken(this, null);
             Toast.makeText(this, R.string.empty_token_due_to_an_error, Toast.LENGTH_SHORT).show();
         }
     }

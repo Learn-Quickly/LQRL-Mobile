@@ -39,10 +39,10 @@ public class NodeCreatorDialogFragment extends DialogFragment {
                 .setPositiveButton("Ok", (dialog, which) -> {
                     String title = editTextTitle.getText().toString();
                     String description = editTextDescription.getText().toString();
-                    if(title.isEmpty()){
-                        Toast.makeText(activity, getString(R.string.field_title_is_empty), Toast.LENGTH_SHORT).show();
-                        dismiss();
-                    }
+//                    if(title.isEmpty()){
+//                        Toast.makeText(activity, getString(R.string.field_title_is_empty), Toast.LENGTH_SHORT).show();
+//                        dismiss();
+//                    }
                     ((NodeCreator) fragment).addNode(new Node("_id", title, description, 0, 0));
                 })
                 .setNegativeButton(getString(R.string.cancel_dialog), (dialog, which) -> {

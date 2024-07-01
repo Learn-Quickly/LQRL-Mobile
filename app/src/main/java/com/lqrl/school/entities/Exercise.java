@@ -1,5 +1,7 @@
 package com.lqrl.school.entities;
 
+import androidx.annotation.NonNull;
+
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -24,7 +26,7 @@ public class Exercise {
         AnswerBody = answerBody;
     }
 
-    public String toJSON() throws JSONException {
+    public String toCreateExercisePayloadJSON() throws JSONException {
         JSONObject json = new JSONObject();
         json.put("title", Title);
         json.put("description", Description);
@@ -34,6 +36,16 @@ public class Exercise {
         json.put("exercise_type", "Conspect");
         json.put("exercise_body", ExerciseBody);
         json.put("answer_body", AnswerBody);
+        return json.toString();
+    }
+
+    public String toLessonUpdatePayloadJSON() throws JSONException {
+        JSONObject json = new JSONObject();
+        json.put("title", Title);
+        json.put("description", Description);
+        json.put("lesson_id", LessonId);
+        json.put("exercise_id", Id);
+
         return json.toString();
     }
 }

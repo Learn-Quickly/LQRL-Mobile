@@ -59,11 +59,16 @@ public class ChangePasswordActivity extends AppCompatActivity implements Activit
             return;
         }
 
-        String oldP = editTextPassword.getEditText().getText().toString();
-        String newP = editTextNewPassword.getEditText().getText().toString();
+        String oldP = editTextPassword.getEditText().getText().toString().trim();
+        String newP = editTextNewPassword.getEditText().getText().toString().trim();
         if(oldP.equals(newP)){
             Toast.makeText(this, R.string.error_passwords_match, Toast.LENGTH_SHORT).show();
         } else {
+            PasswordValidator.PasswordStrength passwordStrength = PasswordValidator.validatePassword(this, newP);
+            if(passwordStrength == PasswordValidator.PasswordStrength.WEAK){
+                Toast.makeText(this, R.string.insufficient_password_strength, Toast.LENGTH_SHORT).show();
+                return;
+            }
             ChangePasswordTask changePasswordTask = new ChangePasswordTask(this, accessToken, oldP, newP);
             changePasswordTask.execute();
         }

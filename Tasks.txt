@@ -1,0 +1,55 @@
+Архитектура:
+1. Слой данных, сетевые запросы/БД
+2. Слой представления, UI/UX
+3. Слоя бизнес-логики - нету. Бизнес-логика совмещена со слоем отображения.
+
+1. Экран поиска курсов: карточки: разметка; фрагмент.
+Вкладка пошук курсів на DrawerLayout
+GET /api/course/get_courses/
+CourseAdapter: режим ученика. В этом режиме кнопка меняется на enroll course
+CourseSearchFragment - поиск по названию, фильтр по цене в DrawerLayout (бесплатный/небесплатный)
+12:34
+2. Кнопка зарегистрироваться в курсе. *Опционально, неактивность кнопки реализуется через взаимоисключение "зарегистрированных курсов" и всех остальных.
+PUT /api/course/register_for_course
+
+3. Вкладка мої курси на DrawerLayout
+CoursesWatchFragment в режиме ученика.
+GET /api/course/get_user_courses_registered/
+
+4.  Кнопка перейти к курсу (к его урокам). Список уроков курса.
+GET /api/course/lesson/get_lessons/{course_id}
+В LessonWatchFragment внедрить режим ученика, который убирает всё что относится к режиму учителя (кнопки). Отображается только список уроков с кнопками перейти к уроку (и здесь - режим ученика для LessonAdapter).
+
+5. Перейти к уроку. Список заданий урока.
+GET /api/course/lesson/exercise/get_lesson_exercises/{lesson_id}
+Режим ученика в ExercisesWatchFragment.
+
+6. Таймер. Выполнять задания. Отображать оценки заданий.
+Понятное дело, режим ученика в ExerciseAdapter с другой разметкой.
+Timer - уведомление об оставшемся времени.
+POST /api/course/lesson/exercise/start_exercise
+PUT /api/course/lesson/exercise/save_changes
+GET /api/course/lesson/exercise/get_exercise_completions/{exercise_id}
+
+5. Отображение баллов на уроке. ?
+
+
+-----------------------------------------------------------------------------------------------
+register
+login
+create course
+create lesson
+create exercise, random nodes
+
+Shuffle конспекта
+Отображение задания в ответе
+
+
+
+
+
+
+
+
+
+

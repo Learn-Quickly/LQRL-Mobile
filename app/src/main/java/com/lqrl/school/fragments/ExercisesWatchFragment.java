@@ -2,12 +2,10 @@ package com.lqrl.school.fragments;
 
 import android.content.Context;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.fragment.app.Fragment;
@@ -19,16 +17,11 @@ import com.lqrl.school.R;
 import com.lqrl.school.adapters.ExerciseAdapter;
 import com.lqrl.school.entities.Exercise;
 import com.lqrl.school.entities.Lesson;
-import com.lqrl.school.interfaces.ArraySetter;
-import com.lqrl.school.interfaces.ExerciseCreator;
 import com.lqrl.school.dialogs.ExerciseCreateDialogFragment;
-import com.lqrl.school.web_services.CreateExerciseTask;
-import com.lqrl.school.web_services.RefreshExercisesTask;
 
 import java.util.ArrayList;
 
-public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exercise>,
-        ExerciseCreator {
+public class ExercisesWatchFragment extends Fragment {
     Context activity;
     String accessToken;
     Lesson lesson;
@@ -40,6 +33,7 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
         this.activity = context;
         this.accessToken = accessToken;
         this.lesson = lesson;
+        ((HomeActivity)activity).exerciseService.setCurrentLesson(lesson);
     }
 
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup parent, Bundle savedInstanceState){
@@ -49,13 +43,12 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
         RecyclerView recyclerView = view.findViewById(R.id.exercisesRecyclerView);
         recyclerView.setLayoutManager(new LinearLayoutManager(activity));
 
-        exercises = new ArrayList<>();
-        exercises.addAll(((HomeActivity)activity).exercisesCache);
+        exercises = ((HomeActivity)activity).exerciseService.exercises;
 
         exercisesAdapter = new ExerciseAdapter(activity, exercises, this);
         recyclerView.setAdapter(exercisesAdapter);
         refreshExercises.setOnClickListener(v -> {
-            refreshList(null);
+            refreshList();
         });
         createExercises.setOnClickListener(v -> {
             new ExerciseCreateDialogFragment(this, activity).show(getChildFragmentManager(), "CREATE_EXERCISE");
@@ -63,40 +56,47 @@ public class ExercisesWatchFragment extends Fragment implements ArraySetter<Exer
         return view;
     }
 
-    public void refreshList(Exercise createdOnServer) {
-        if(createdOnServer != null) ((HomeActivity)activity).exercisesCache.remove(createdOnServer);
-        new RefreshExercisesTask(lesson, activity, accessToken, this).execute();
+    public void refreshList() {
+        ((HomeActivity)activity).exerciseService.setExerciseAdapter(exercisesAdapter);
+        ((HomeActivity)activity).exerciseService.refreshExercisesList();
+        //((HomeActivity)activity).exerciseService.setExerciseAdapter(null);
     }
 
-    @Override
-    public void setArrayList(ArrayList<Exercise> src, boolean ok) {
-        if(ok){
-            exercises.clear();
-            exercises.addAll(src);
-            exercises.addAll(((HomeActivity)activity).exercisesCache);
-            exercisesAdapter.notifyDataSetChanged();
-            //Toast.makeText(activity, R.string.refreshed_successfully, Toast.LENGTH_SHORT).show();
-        } else {
-            Toast.makeText(activity, R.string.network_or_server_error, Toast.LENGTH_SHORT).show();
-        }
-    }
+//    @Override
+//    public void setArrayList(ArrayList<Exercise> src, boolean ok) {
+//        if(ok){
+//            exercises.clear();
+//            exercises.addAll(src);
+//            exercises.addAll(((HomeActivity)activity).exercisesCache);
+//            exercisesAdapter.notifyDataSetChanged();
+//            //Toast.makeText(activity, R.string.refreshed_successfully, Toast.LENGTH_SHORT).show();
+//        } else {
+//            Toast.makeText(activity, R.string.network_or_server_error, Toast.LENGTH_SHORT).show();
+//        }
+//    }
 
-    @Override
-    public void sendExerciseEntity(Exercise exercise) {
-        exercise.LessonId = lesson.Id;
-        exercises.add(exercise);
-        ((HomeActivity)activity).exercisesCache.add(exercise);
-        exercisesAdapter.notifyDataSetChanged();
-    }
+//    @Override
+//    public void sendExerciseEntity(Exercise exercise) {
+//        exercise.LessonId = lesson.Id;
+//        exercises.add(exercise);
+//        ((HomeActivity)activity).exerciseService.addToCache(exercise);
+//        exercisesAdapter.notifyDataSetChanged();
+//    }
 
     @Override
     public void onViewCreated(@NonNull View view, Bundle savedInstanceState){
-        refreshList(null);
+        refreshList();
     }
 
-    public void saveExercise(Exercise currentItem) {
-        Log.e(TAG, "saveExercise: exercise body:" + currentItem.ExerciseBody);
-        Log.e(TAG, "saveExercise: exercise answer:" + currentItem.ExerciseBody);
-        new CreateExerciseTask(activity, this, currentItem, accessToken).execute();
+    @Override
+    public void onPause() {
+        super.onPause();
+        //((HomeActivity) activity).exerciseService.clearCache();
     }
+
+    //    public void saveExercise(Exercise currentItem) {
+//        Log.e(TAG, "saveExercise: exercise body:" + currentItem.ExerciseBody);
+//        Log.e(TAG, "saveExercise: exercise answer:" + currentItem.ExerciseBody);
+//        new CreateExerciseTask(activity, this, currentItem, accessToken).execute();
+//    }
 }

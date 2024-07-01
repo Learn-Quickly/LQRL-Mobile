@@ -38,15 +38,30 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     private float scaleFactor = 1.0f;
     private float scrollX = 0;
     private float scrollY = 0;
-    private ArrayList<Node> nodes;
-    private ArrayList<Line> lines;
+    public static ArrayList<Node> nodes;
+    public static ArrayList<Line> lines;
     private Paint nodeTextPaint;
     private Paint linePaint;
     private boolean resizeNodeMode = false;
     private boolean connectionMode = false;
     private boolean deleteMode = false;
 
-     public static enum Mode {
+    public void shuffleNodes() {
+        Random random = new Random();
+        int maxH = getHeight() - 100, maxW = getWidth() - 100;
+        for(int i = 0; i < nodes.size(); i++){
+            Node node = nodes.get(i);
+            node.rect.left = random.nextInt(maxW);
+            node.rect.top = random.nextInt(maxH);
+            node.rect.right = node.rect.left + 500;
+            node.rect.bottom = node.rect.top + 300;
+            node.xBegin = (int) node.rect.left;
+            node.yBegin = (int) node.rect.top;
+        }
+        lines.clear();
+    }
+
+    public static enum Mode {
         NoteConstructor,
         AnswerConstructor
      }
@@ -136,37 +151,47 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
             drawFromJSON(new JSONObject(JSON));
     }
 
-    public void saveJSONDiagramToExercise(Mode mode, Exercise exercise, Context activity) {
+    public static void saveJSONDiagramToExercise(Mode mode, Exercise exercise, Context activity,
+                                          ArrayList<Node> nodesArrayList,
+                                          ArrayList<Line> linesArrayList) {
         String jsonResult = null;
+        if(nodesArrayList == null) nodesArrayList = nodes;
+        if(linesArrayList == null) linesArrayList = lines;
 
         try {
             JSONObject root = new JSONObject();
             JSONArray nodesJSON = new JSONArray();
             JSONArray connectionsJSON = new JSONArray();
 
-            for (int i = 0; i < nodes.size(); i++) {
-                JSONObject jsonNode = convertNodeToJSON(nodes.get(i));
+            for (int i = 0; i < nodesArrayList.size(); i++) {
+                JSONObject jsonNode = convertNodeToJSON(nodesArrayList.get(i));
                 nodesJSON.put(i, jsonNode);
             }
 
-            for (int i = 0; i < lines.size(); i++) {
-                JSONObject jsonConnection = convertLineToJSON(lines.get(i));
+            for (int i = 0; i < linesArrayList.size(); i++) {
+                JSONObject jsonConnection = convertLineToJSON(linesArrayList.get(i));
                 connectionsJSON.put(i, jsonConnection);
             }
 
             root.put("nodes", nodesJSON);
             root.put("connections", connectionsJSON);
 
-            //jsonResult = root.toString();
+            //Log.d("Exercise before save", exercise.ExerciseBody.toString());
+
             if(mode == Mode.AnswerConstructor) exercise.AnswerBody = root;
-            else exercise.ExerciseBody = root;
+            else {
+                exercise.ExerciseBody = root;
+                exercise.AnswerBody = root;
+            }
+            //((HomeActivity)activity).exerciseService.notifyExerciseEditedNote(exercise);
             Toast.makeText(activity, R.string.note_was_saved, Toast.LENGTH_SHORT).show();
+            //Log.d("Exercise after saveJSONDiagramToExercise", exercise.ExerciseBody.toString());
         } catch (JSONException e) {
             throw new RuntimeException(e);
         }
     }
 
-    private JSONObject convertLineToJSON(Line line) throws JSONException {
+    public static JSONObject convertLineToJSON(Line line) throws JSONException {
         JSONObject lineObj = new JSONObject();
         lineObj.put("from", line.n1.id);
         lineObj.put("to", line.n2.id);
@@ -174,7 +199,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     }
 
     @NonNull
-    private JSONObject convertNodeToJSON(Node node) throws JSONException {
+    public static JSONObject convertNodeToJSON(Node node) throws JSONException {
         JSONObject nodeObj = new JSONObject();
         nodeObj.put("id", node.id);
         nodeObj.put("x", (int) node.rect.left);
@@ -248,7 +273,7 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     public void toggleConnectionMode() {
         deleteMode = false;
         connectionMode = !connectionMode;
-        Toast.makeText(getContext(), getContext().getString(R.string.connection_mode) + (connectionMode ? getContext().getString(R.string.on) : getContext().getString(R.string.off)), Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getContext(), getContext().getString(R.string.connection_mode) + (connectionMode ? getContext().getString(R.string.on) : getContext().getString(R.string.off)), Toast.LENGTH_SHORT).show();
     }
 
     public void toggleDeleteNodeMode() {
@@ -365,10 +390,12 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
 
     private void renderNodeBlock(Canvas canvas, Node node) {
         canvas.drawRect(node.rect, paint);
-        Path pathHeader = new Path();
-        pathHeader.moveTo(node.rect.left, node.rect.top + node.rect.height() / 4f);
-        pathHeader.lineTo(node.rect.right, node.rect.top + node.rect.height() / 4f);
-        canvas.drawPath(pathHeader, paint);
+        if(!node.title.isEmpty()) {
+            Path pathHeader = new Path();
+            pathHeader.moveTo(node.rect.left, node.rect.top + node.rect.height() / 4f);
+            pathHeader.lineTo(node.rect.right, node.rect.top + node.rect.height() / 4f);
+            canvas.drawPath(pathHeader, paint);
+        }
     }
 
     private void drawRectCenteredString(Canvas canvas, String text, RectF rect) {
@@ -427,42 +454,44 @@ public class NoteBuilderView extends View implements GestureDetector.OnGestureLi
     }
 
     private void renderNodeDescriptionWidthAligned(Canvas canvas, Node node, float fontSize) {
-        nodeTextPaint.setTextSize(fontSize);
-        nodeTextPaint.setStrokeWidth(4f);
-        float descriptionPaddingPx = 30f;
-        float lineSpacingPx = 20f;
-        float maxLineWidthPx = node.rect.width() - 2 * descriptionPaddingPx;
-        float textHeight;
-        Rect textBounds = new Rect();
-        nodeTextPaint.getTextBounds(node.description, 0, node.description.length(), textBounds);
-        textHeight = textBounds.height();
-        int maxLinesCount = (int) ((node.rect.height() - 2 * descriptionPaddingPx - lineSpacingPx)
-                / (textHeight + lineSpacingPx));
-        float currentLineWidth;
-        String[] words = node.description.split(" ");
-        int wordIndex = 0;
-        int lineIndex = 0;
+         if(!node.description.isEmpty()) {
+             nodeTextPaint.setTextSize(fontSize);
+             nodeTextPaint.setStrokeWidth(4f);
+             float descriptionPaddingPx = 30f;
+             float lineSpacingPx = 20f;
+             float maxLineWidthPx = node.rect.width() - 2 * descriptionPaddingPx;
+             float textHeight;
+             Rect textBounds = new Rect();
+             nodeTextPaint.getTextBounds(node.description, 0, node.description.length(), textBounds);
+             textHeight = textBounds.height();
+             int maxLinesCount = (int) ((node.rect.height() - 2 * descriptionPaddingPx - lineSpacingPx)
+                     / (textHeight + lineSpacingPx));
+             float currentLineWidth;
+             String[] words = node.description.split(" ");
+             int wordIndex = 0;
+             int lineIndex = 0;
 
-        StringBuilder currentLine = new StringBuilder();
-        String lastCopy = null;
-        while (lineIndex < maxLinesCount) {
-            if (wordIndex == words.length) break;
-            currentLine.setLength(0);
-            while (wordIndex < words.length) {
-                currentLine.append(words[wordIndex++]);
-                currentLine.append(" ");
-                currentLineWidth = nodeTextPaint.measureText(currentLine.toString());
-                if (currentLineWidth > maxLineWidthPx) {
-                    wordIndex--;
-                    break;
-                } else {
-                    lastCopy = currentLine.toString();
-                }
-            }
+             StringBuilder currentLine = new StringBuilder();
+             String lastCopy = null;
+             while (lineIndex < maxLinesCount) {
+                 if (wordIndex == words.length) break;
+                 currentLine.setLength(0);
+                 while (wordIndex < words.length) {
+                     currentLine.append(words[wordIndex++]);
+                     currentLine.append(" ");
+                     currentLineWidth = nodeTextPaint.measureText(currentLine.toString());
+                     if (currentLineWidth > maxLineWidthPx) {
+                         wordIndex--;
+                         break;
+                     } else {
+                         lastCopy = currentLine.toString();
+                     }
+                 }
 
-            renderNodeText(canvas, node, descriptionPaddingPx, textHeight, lineSpacingPx, lineIndex, maxLineWidthPx, lastCopy, 4);
-            lineIndex++;
-        }
+                 renderNodeText(canvas, node, descriptionPaddingPx, textHeight, lineSpacingPx, lineIndex, maxLineWidthPx, lastCopy, 4);
+                 lineIndex++;
+             }
+         }
     }
 
     private void renderNodeText(Canvas canvas, Node node, float textPaddingPx, float textHeight,

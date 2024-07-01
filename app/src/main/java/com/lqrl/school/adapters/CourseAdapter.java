@@ -13,7 +13,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.lqrl.school.R;
+import com.lqrl.school.UserMode;
 import com.lqrl.school.entities.Course;
+import com.lqrl.school.interfaces.CourseEnroller;
 import com.lqrl.school.interfaces.CoursePublisher;
 
 import java.util.ArrayList;
@@ -23,9 +25,12 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
     private final ArrayList<Course> courses;
     private Context activity;
 
-    public CourseAdapter(Context activity, ArrayList<Course> cards){
+    private UserMode userMode;
+
+    public CourseAdapter(Context activity, ArrayList<Course> cards, UserMode userMode) {
         this.courses = cards;
         this.activity = activity;
+        this.userMode = userMode;
     }
 
     @NonNull
@@ -43,9 +48,22 @@ public class CourseAdapter extends RecyclerView.Adapter<CourseAdapter.CardViewHo
         holder.textViewPrice.setText(String.valueOf(currentItem.getCoursePrice()));
         holder.textViewCourseTitle.setText(currentItem.getCourseName());
         holder.textViewCourseDescription.setText(currentItem.getCourseDescription());
-        holder.learnButton.setOnClickListener(v -> {
-            ((CoursePublisher) activity).requestPublishCourse(currentItem);
-        });
+//        if(userMode == UserMode.SearchCourse){
+//            holder.learnButton.setText(R.string.enroll_course);
+//        }
+//        if(userMode == UserMode.SearchCourse){
+//            holder.learnButton.setOnClickListener(v -> {
+//                ((CourseEnroller)activity).tryEnrollCourse(currentItem);
+//            });
+//        } else {
+        if(userMode == UserMode.Create) {
+            holder.learnButton.setText(R.string.enroll_course_adapter);
+            holder.learnButton.setOnClickListener(v -> {
+                ((CoursePublisher) activity).requestPublishCourse(currentItem);
+            });
+        }
+        //}
+
         holder.constraintLayout.setBackgroundColor(currentItem.getCourseColor());
     }
 

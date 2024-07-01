@@ -13,6 +13,7 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lqrl.school.UserMode;
 import com.lqrl.school.entities.Course;
 import com.lqrl.school.adapters.CourseAdapter;
 import com.lqrl.school.R;
@@ -45,7 +46,7 @@ public class CoursesWatchFragment extends Fragment implements StringSetter, Arra
         recyclerView.setLayoutManager(new LinearLayoutManager(context));
 
         courses = new ArrayList<>();
-        courseAdapter = new CourseAdapter(context, courses);
+        courseAdapter = new CourseAdapter(context, courses, UserMode.Create);
         recyclerView.setAdapter(courseAdapter);
 
         rootView = view;

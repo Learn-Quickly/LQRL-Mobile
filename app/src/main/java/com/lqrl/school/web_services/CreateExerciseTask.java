@@ -7,11 +7,10 @@ import android.widget.Toast;
 import androidx.annotation.Nullable;
 
 import com.lqrl.school.BuildConfig;
+import com.lqrl.school.HomeActivity;
 import com.lqrl.school.R;
+import com.lqrl.school.TokenManager;
 import com.lqrl.school.entities.Exercise;
-import com.lqrl.school.entities.Lesson;
-import com.lqrl.school.fragments.ExercisesWatchFragment;
-import com.lqrl.school.fragments.LessonsWatchFragment;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -26,17 +25,14 @@ import okhttp3.Response;
 
 public class CreateExerciseTask extends AsyncTask<Void, Void, String> {
 
-    OkHttpClient client = new OkHttpClient();
     Context activity;
-    ExercisesWatchFragment fragment;
     Exercise exercise;
     String accessToken;
 
-    public CreateExerciseTask(Context activity, ExercisesWatchFragment fragment, Exercise exercise, String accessToken){
+    public CreateExerciseTask(Context activity, Exercise exercise){
         this.activity = activity;
-        this.fragment = fragment;
         this.exercise = exercise;
-        this.accessToken = accessToken;
+        this.accessToken = TokenManager.getToken(activity);
     }
 
     @Override
@@ -45,13 +41,14 @@ public class CreateExerciseTask extends AsyncTask<Void, Void, String> {
     }
 
     @Nullable
-    private String createExercise(Exercise exercise, String accessToken) {
+    public static String createExercise(Exercise exercise, String accessToken) {
+        OkHttpClient client = new OkHttpClient();
         String postBody = "";
         MediaType JSON = MediaType.get("application/json; charset=utf-8");
         RequestBody body;
 
         try {
-            postBody = exercise.toJSON();
+            postBody = exercise.toCreateExercisePayloadJSON();
             body = RequestBody.create(postBody, JSON);
 
         } catch (JSONException e) {
@@ -88,7 +85,8 @@ public class CreateExerciseTask extends AsyncTask<Void, Void, String> {
                 throw new RuntimeException(e);
             }
 
-            fragment.refreshList(exercise);
+            //fragment.refreshList(exercise);
+            ((HomeActivity)activity).exerciseService.notifyExerciseCreated(exercise);
         } else {
             Toast.makeText(activity, R.string.failed_to_create_exercise, Toast.LENGTH_SHORT).show();
         }

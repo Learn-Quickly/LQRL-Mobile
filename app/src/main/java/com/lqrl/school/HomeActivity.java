@@ -19,6 +19,7 @@ import androidx.fragment.app.FragmentManager;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.google.android.material.navigation.NavigationView;
+import com.lqrl.school.service.ExerciseService;
 import com.lqrl.school.dialogs.NodeCreatorDialogFragment;
 import com.lqrl.school.dialogs.PublishCourseDialogFragment;
 import com.lqrl.school.entities.Course;
@@ -36,8 +37,6 @@ import com.lqrl.school.interfaces.StringSetter;
 import com.lqrl.school.note_builder.NoteBuilderView;
 import com.lqrl.school.web_services.PublishCourseTask;
 
-import java.util.ArrayList;
-
 public class HomeActivity extends AppCompatActivity implements NavigationView.OnNavigationItemSelectedListener,
         StringSetter,
         CoursePublisher,
@@ -52,7 +51,7 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     private ExercisesWatchFragment exercisesWatchFragment;
     private NoteBuilderFragment noteBuilderFragment;
     private Toolbar toolbar;
-    public ArrayList<Exercise> exercisesCache;
+    public ExerciseService exerciseService;
 
     @Override
     public void onBackPressed() {
@@ -83,13 +82,14 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
     public boolean onNavigationItemSelected(@NonNull MenuItem item) {
         int id = item.getItemId();
 
-        if (id == R.id.nav_learn) {
-            // Precaution of global variable check
-            if(drawerLayout.isDrawerOpen(GravityCompat.START))
-                drawerLayout.closeDrawer(GravityCompat.START);
-            item.setChecked(true);
-            return true;
-        } else if (id == R.id.nav_create) {
+//        if (id == R.id.nav_learn) {
+//            // Precaution of global variable check
+//            if(drawerLayout.isDrawerOpen(GravityCompat.START))
+//                drawerLayout.closeDrawer(GravityCompat.START);
+//            item.setChecked(true);
+//            return true;
+//        } else
+        if (id == R.id.nav_create) {
             launchCreatorCoursesWatchFragment();
             if(drawerLayout.isDrawerOpen(GravityCompat.START))
                 drawerLayout.closeDrawer(GravityCompat.START);
@@ -103,10 +103,11 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
 //            item.setChecked(true);
 //            return true;
 //        }
-        else if(id == R.id.filter) {
-            openContextMenu(navigationView);
-            return true;
-        } else if(id == R.id.create_course_draft) {
+//        else if(id == R.id.filter) {
+//            openContextMenu(navigationView);
+//            return true;
+//        }
+        else if(id == R.id.create_course_draft) {
             CreateCourseFragment createCourseFragment = new CreateCourseFragment(this, accessToken);
             getSupportFragmentManager().beginTransaction()
                     .replace(R.id.fragment_container_view, createCourseFragment)
@@ -137,14 +138,15 @@ public class HomeActivity extends AppCompatActivity implements NavigationView.On
         drawerLayout = findViewById(R.id.drawer_layout);
         navigationView = findViewById(R.id.nav_view);
         toolbar = findViewById(R.id.toolbar);
-
+        toolbar.setTitle(R.string.creator_mode);
         actionBarDrawerToggle = new ActionBarDrawerToggle(this, drawerLayout, toolbar, R.string.drawer_open, R.string.drawer_close);
         drawerLayout.addDrawerListener(actionBarDrawerToggle);
         actionBarDrawerToggle.syncState();
 
         navigationView.setNavigationItemSelectedListener(this);
         registerForContextMenu(navigationView);
-        exercisesCache = new ArrayList<>();
+
+        exerciseService = new ExerciseService(this);
 
         launchCreatorCoursesWatchFragment();
     }

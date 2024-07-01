@@ -7,6 +7,7 @@ import android.text.Spanned;
 import android.text.method.LinkMovementMethod;
 import android.widget.Button;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -44,9 +45,13 @@ public class SignUpActivity extends AppCompatActivity implements ActivityRedirec
     }
 
     private void signUp() {
-        String username = editTextEmail.getEditText().getText().toString();
-        String password = editTextPassword.getEditText().getText().toString();
-
+        String username = editTextEmail.getEditText().getText().toString().trim();
+        String password = editTextPassword.getEditText().getText().toString().trim();
+        PasswordValidator.PasswordStrength passwordStrength = PasswordValidator.validatePassword(this, password);
+        if(passwordStrength == PasswordValidator.PasswordStrength.WEAK){
+            Toast.makeText(this, R.string.insufficient_password_strength, Toast.LENGTH_SHORT).show();
+            return;
+        }
         RegisterTask registration = new RegisterTask(this, username, password);
         registration.execute();
     }

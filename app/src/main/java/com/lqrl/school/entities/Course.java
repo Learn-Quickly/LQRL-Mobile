@@ -4,13 +4,13 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Course {
-    private final String courseName;
-    private final int courseParticipantsCount;
-    private final float coursePrice;
-    private final int color;
-    private final String courseDescription;
-    private final int courseId;
-    private final String state;
+    public String courseName;
+    public int courseParticipantsCount;
+    public float coursePrice;
+    public int color;
+    public String courseDescription;
+    public int courseId;
+    public String state;
 
     public Course(int courseId, String courseName, int courseParticipantsCount, float coursePrice, int color, String courseDescription, String state){
         this.courseName = courseName; this.courseParticipantsCount = courseParticipantsCount;

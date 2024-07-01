@@ -15,6 +15,7 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.fragment.app.DialogFragment;
 
+import com.lqrl.school.HomeActivity;
 import com.lqrl.school.R;
 import com.lqrl.school.entities.Exercise;
 import com.lqrl.school.fragments.ExercisesWatchFragment;
@@ -23,7 +24,7 @@ import com.lqrl.school.interfaces.ExerciseCreator;
 public class ExerciseCreateDialogFragment extends DialogFragment implements AdapterView.OnItemSelectedListener {
     ExercisesWatchFragment fragment;
     Context activity;
-    String itemChosen = null;
+    int itemChosen = 0;
 
     public ExerciseCreateDialogFragment(ExercisesWatchFragment fragment, Context context){
         this.fragment = fragment;
@@ -41,6 +42,7 @@ public class ExerciseCreateDialogFragment extends DialogFragment implements Adap
         EditText editTextCompletionTime = view.findViewById(R.id.et_exercise_time);
         Spinner spinnerDifficulty = view.findViewById(R.id.sp_exercise_difficulty);
         String[] items = new String[] {getString(R.string.difficulty_easy), getString(R.string.difficulty_medium), getString(R.string.difficulty_hard)};
+
         String choosedItem = null;
         ArrayAdapter<String> spItemsAdapter = new ArrayAdapter<>(activity, android.R.layout.simple_spinner_dropdown_item, items);
         spinnerDifficulty.setAdapter(spItemsAdapter);
@@ -56,7 +58,14 @@ public class ExerciseCreateDialogFragment extends DialogFragment implements Adap
                         Toast.makeText(activity, getString(R.string.field_title_is_empty), Toast.LENGTH_SHORT).show();
                         dismiss();
                     }
-                    ((ExerciseCreator) fragment).sendExerciseEntity(new Exercise(-1, title, description, -1, completionTime, itemChosen, null, null));
+                    String difficult = null;
+                    switch(itemChosen){
+                        case 0: difficult = "Easy"; break;
+                        case 1: difficult = "Medium"; break;
+                        case 2: difficult = "Hard"; break;
+                    }
+                    Exercise ex = new Exercise(-1, title, description, -1, completionTime, difficult, null, null);
+                    ((HomeActivity)activity).exerciseService.saveExerciseTempPayload(ex);
                 })
                 .setNegativeButton(R.string.cancel_dialog, (dialog, which) -> {
 
@@ -66,7 +75,7 @@ public class ExerciseCreateDialogFragment extends DialogFragment implements Adap
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-        itemChosen = (String) parent.getItemAtPosition(position);
+        itemChosen = position;
     }
 
     @Override

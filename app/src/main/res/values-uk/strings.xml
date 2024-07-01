@@ -2,7 +2,7 @@
 <resources>
     <string name="difficulty_easy">Легко</string>
     <string name="difficulty_medium">Середня</string>
-    <string name="create_task">Створити завдання</string>
+    <string name="create_task">Створити вправу</string>
     <string name="field_title_is_empty">Поле заголовку пусто.</string>
     <string name="cancel_dialog">Відмінити</string>
     <string name="difficulty_hard">Важко</string>
@@ -24,8 +24,8 @@
     <string name="drawer_close">Бургер закрито</string>
     <string name="password_changed_successfully">Пароль змінено успішно</string>
     <string name="server_error_wrong_old_password">Помилка: Невірний старий пароль</string>
-    <string name="exercise_created_successfully">Завдання успішно створено</string>
-    <string name="failed_to_create_exercise">Помилка створення завдання</string>
+    <string name="exercise_created_successfully">Вправу успішно створено</string>
+    <string name="failed_to_create_exercise">Помилка створення вправи</string>
     <string name="lesson_created_successfully">Урок успішно створено</string>
     <string name="failed_to_create_lesson">Помилка створення уроку</string>
     <string name="course_published">Курс опубліковано</string>
@@ -62,18 +62,18 @@
     <string name="course_price_write_0_to_make_free">Ціна (залиште 0 для безкоштовного)</string>
     <string name="color">Колір</string>
     <string name="pick_a_color">Обрати колір!</string>
-    <string name="exercise_difficulty">Складність 💪🏻</string>
+    <string name="exercise_difficulty">Складність вправи 💪🏻</string>
     <string name="exercise_time_to_complete">Час виконання 🕐</string>
     <string name="seconds">Секунди</string>
     <string name="lesson_title">Заголовок уроку</string>
     <string name="lesson_description">Опис уроку</string>
     <string name="node_title">Заголовок блоку</string>
     <string name="node_description">Опис блоку</string>
-    <string name="create_exercise">Створити завдання</string>
+    <string name="create_exercise">Створити вправу</string>
     <string name="refresh">Оновити</string>
     <string name="refresh_lesons_list">Оновити уроки</string>
-    <string name="exercise">Завдання</string>
-    <string name="answer">Відповідь</string>
+    <string name="exercise">Конспект</string>
+    <string name="answer">Завдання</string>
     <string name="save">Зберегти</string>
     <string name="delete">видалити</string>
     <string name="open">Відкрити</string>
@@ -92,4 +92,19 @@
     <string name="new_password">Новий пароль</string>
     <string name="lesson_deleted">Урок видалено</string>
     <string name="failed_to_delete_lesson">Не вдалося видалити урок</string>
+    <string name="combinatorics_course_desc">Розділ математики, в якому вивчаються закономірності зіставлення комбінацій із різних об\'єктів</string>
+    <string name="combinatorics_course_name">Комбінаторика</string>
+    <string name="l1_title">Основи</string>
+    <string name="l1_desc">Основні відомості про комбінаторику</string>
+    <string name="l2_title">Типові комбінації</string>
+    <string name="l2_desc">Про усі види комбінацій</string>
+    <string name="enroll_course">Enroll course</string>
+    <string name="subscribed_on_course">Subscribed on course!</string>
+    <string name="error_subscribing_on_course">Error subscribing on course :(</string>
+    <string name="insufficient_password_strength">Слабкий пароль!</string>
+    <string name="exercise_updated">Завдання оновлено</string>
+    <string name="failed_to_update_exercise">Помилка оновлення завдання</string>
+    <string name="my_courses">Мої курси:</string>
+    <string name="search_courses">Search courses...</string>
+    <string name="enroll_course_adapter">Enroll course</string>
 </resources>

@@ -36,7 +36,7 @@ public class GetUserDataTask extends AsyncTask<Void, Void, String> {
         try (Response response = client.newCall(getUserDataRequest).execute()) {
             if (!response.isSuccessful()) {
                 throw new IOException("Запрос к серверу не был успешен: " +
-                        response.code() + " " + response.message());
+                        response.code() + " " + response.message() + response.body().string());
             }
             return response.body().string();
 

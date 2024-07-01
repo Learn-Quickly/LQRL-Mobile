@@ -95,4 +95,19 @@
     <string name="new_password">New password</string>
     <string name="lesson_deleted">Lesson deleted</string>
     <string name="failed_to_delete_lesson">Failed to delete lesson</string>
+    <string name="combinatorics_course_desc">Розділ математики, в якому вивчаються закономірності зіставлення комбінацій із різних об\'єктів</string>
+    <string name="combinatorics_course_name">Комбінаторика</string>
+    <string name="l1_title">Основи</string>
+    <string name="l1_desc">Основні відомості про комбінаторику</string>
+    <string name="l2_title">Типові комбінації</string>
+    <string name="l2_desc">Про усі види комбінацій</string>
+    <string name="enroll_course">Enroll course</string>
+    <string name="subscribed_on_course">Subscribed on course!</string>
+    <string name="error_subscribing_on_course">Error subscribing on course :(</string>
+    <string name="insufficient_password_strength">Insufficient password strength</string>
+    <string name="exercise_updated">Exercise updated</string>
+    <string name="failed_to_update_exercise">Failed to update exercise</string>
+    <string name="my_courses">My courses:</string>
+    <string name="search_courses">Search courses...</string>
+    <string name="enroll_course_adapter">Enroll course</string>
 </resources>

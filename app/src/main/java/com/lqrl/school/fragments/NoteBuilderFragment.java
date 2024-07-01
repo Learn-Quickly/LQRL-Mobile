@@ -62,10 +62,10 @@ public class NoteBuilderFragment extends Fragment implements NodeCreator {
     }
 
     public void saveExerciseJSONNote(Context activity) {
-        noteBuilderView.saveJSONDiagramToExercise(mode, exercise, activity);
+        noteBuilderView.saveJSONDiagramToExercise(mode, exercise, activity, null, null);
     }
 
     public void shuffleNodesRemoveArrows() {
-        // TODO
+        noteBuilderView.shuffleNodes();
     }
 }

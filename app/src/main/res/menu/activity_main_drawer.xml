@@ -17,11 +17,14 @@
 
     <item android:title="@string/tools">
         <menu>
-            <item android:title="@string/filter_drawerlayout"
-                android:icon="@drawable/filter_foreground"
-                android:id="@+id/filter"/>
+<!--            <item android:title="@string/filter_drawerlayout"-->
+<!--                android:icon="@drawable/filter_foreground"-->
+<!--                android:id="@+id/filter"/>-->
             <item android:title="@string/course_draft"
                 android:id="@+id/create_course_draft"/>
+
+            <item android:title="@string/search_courses"
+                android:id="@+id/search_published_courses"/>
         </menu>
     </item>
 

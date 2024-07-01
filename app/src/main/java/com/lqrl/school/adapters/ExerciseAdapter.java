@@ -10,6 +10,7 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.lqrl.school.HomeActivity;
 import com.lqrl.school.R;
 import com.lqrl.school.entities.Exercise;
 import com.lqrl.school.fragments.ExercisesWatchFragment;
@@ -43,7 +44,7 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
 
         holder.textViewTitle.setText(currentItem.Title);
         holder.textViewDescription.setText(currentItem.Description);
-        holder.difficulty.setText(currentItem.Difficulty);
+        holder.difficulty.setText(currentItem.Difficulty.toString());
         holder.timeSeconds.setText(String.valueOf(currentItem.CompletionTime));
 
         holder.goNoteBuilder.setOnClickListener(v -> {
@@ -53,7 +54,9 @@ public class ExerciseAdapter extends RecyclerView.Adapter<ExerciseAdapter.Exerci
             ((NoteBuilderDealer)activity).goToBuilder(currentItem, NoteBuilderView.Mode.AnswerConstructor);
         });
         holder.saveExercise.setOnClickListener(v ->{
-            exerciseWatchFragment.saveExercise(currentItem);
+            //exerciseWatchFragment.saveExercise(currentItem);
+            //((HomeActivity)activity).exerciseService.setExerciseAdapter(this);
+            ((HomeActivity)activity).exerciseService.createOrUpdateExercise(currentItem);
         });
     }
 
